@@ -1,0 +1,11 @@
+
+/essay/template/
+
+*.*~
+*.log
+*.aux
+*.synctex.gz
+*.toc
+*.out
+*.bbl
+*.blg
