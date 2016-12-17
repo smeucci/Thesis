@@ -163,7 +163,7 @@
     \if@dottorato
       {\large Dottorato di Ricerca in}\medskip\\
     \else
-      {\large Corso di Laurea in}\medskip\\
+      {\large Corso di Laurea Magistrale in}\medskip\\
     \fi
     \Large\textsc{\@titolocorso}\medskip\\
     \if@dottorato
