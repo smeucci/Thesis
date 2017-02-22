@@ -2,12 +2,12 @@
 
 ## 1. Introduction
 
-###### 1.1. Introduction to Multimedia Forensics
+##### 1.1. Introduction to Multimedia Forensics
 
 - Diffusione dei video digitali e loro utilizzo come potenziale fonte di prova.
 - Autenticità e integrità (Piva Survey, 2014-ICCT.pdf).
 
-###### 1.2. Forensic Analysis of Video File Format
+##### 1.2. Forensic Analysis of Video File Format
 
 - Tracce nel container (VideoFormantAn.pdf).
 - Applicabilità per valutare l'integrità di un filmato o più in generale la sua provenienza (ultimo container).
