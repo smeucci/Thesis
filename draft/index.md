@@ -40,3 +40,21 @@
 3. Application on Social Network: applicabilità della tua tecnica fuori dall'ambiente di laboratorio.
  - TEST 1: Facebook VS NON-Facebook (native + other social media).
  - TEST 2: YouTube VS NON-YouTube (native + other social media).
+ 
+ 
+## 4. Conclusions
+
+- Riassumere gli obiettivi della tesi, gli strumenti utilizzati e come abbiamo implementato l'idea. 
+- Dire se i risultati sperimentali validano o meno la nostra tesi.
+- Parlare di problemi, cose da migliorare e possibili sviluppi futuri.
+
+## Appendix
+
+##### A. Container
+
+- Mostrare la tabella con tutti gli atomi possibili previsti dallo standard del formato.
+- Dettagli aggiuntivi.
+
+##### B. Mp4Parser
+
+- Spiegare il funzionamento di questa libreria.
