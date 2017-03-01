@@ -23,7 +23,7 @@ Descrivere lo scope della tesi e i suoi obbiettivi
 
 - vft, video format tool restyle, spiegare nel dettaglio come funziona, le funzioni principali, come funziona il programma da command line, spiegare dettagli implementativi (numeri ai tag, attributi decisi da libreria)
 
-- foa, format origin analysis, spiegare come funziona la fase di training e testing (teoria) e poi spiegare come è implementata e come funziona il programma da command line. Spiegare dettagli implementativi (non considero alcuni tag e alcuni attributi, entropia, come calcolo ratio, numA e numB con 0/1 etc)
+- foa, format origin analysis, spiegare come funziona la fase di training e testing (teoria) e poi spiegare come è implementata e come funziona il programma da command line. Spiegare dettagli implementativi (non considero alcuni tag e alcuni attributi, entropia, come calcolo ratio, numA e numB con 0/1 etc), unused fields, unused atoms
 
 - webapp, spiegare con che tecnologia è sviluppato e quale è il suo scopo, classify, compare, test, vft-parse, spiegare manual e auto come selezione la classe avversaria, spiegare problema del parlante
 
