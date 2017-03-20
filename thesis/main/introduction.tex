@@ -1,0 +1,36 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\chaptermark{Introduction}
+
+In un mondo sempre più digitale, sono sempre maggiori le applicazioni in cui i contenuti digitali giocano un ruolo importante.
+
+Grazie alla diffusione di smartphones e camere digitali, l'utilizzo di social networks che permettono la condivisione di video ed immagini digitali è sempre più esteso. Tali risorse, in generale, contengono informazioni di carattere personale; tuttavia, essendo tali video, ed immagini digitali sempre più permeanti le nostre vite, il loro contenuto può comprendere informazioni riguardo ad un evento che si è verificato e quindi rappresentare una fonte significativa di prove riguardanti un crimine, che possono essere utilizzate durante delle indagini. 
+
+In tale contesto sono state sviluppate numerose tecniche di analisi di contenuti multimediali che si pongono l'obbiettivo di fornire un aiuto nel prendere decisioni su un crimine, in modo tale che un risorsa digitale possa essere legittimamente usata come prova in un'aula di tribunale.
+
+Tale è il compito dell'analisi forense ed in particolare del Multimedia Forensics, ovvero sviluppare ed applicare tecniche che permettono, con un certo grado di accuratezza, di stabilire se il contenuto di una risorsa digitale è autentico o se è stato manipolato.
+
+Le domande a cui l'analista forense deve rispondere riguardo tali dati multimediali sono:
+\begin{itemize}
+\item l'autenticità, ovvero se ciò che rappresentano corrisponde a verità.
+\item l'integrità, ovvero se essi sono stati alterati in quale modo pur non compromettendo la loro autenticità.
+\item la determinazione della sorgente di provenienza, un problema che in Multimedia Forensics prende il nome di Source Classification o Source Identification.
+\end{itemize}
+
+Per dare una migliore comprensione di tali problemi forniamo alcuni scenari di applicazione.
+
+Per quanto riguarda la Source Identification, immaginiamo una situazione in cui l'atto stesso della creazione di un'immagine o di un video digitale costituisce un crimine, dovuto al contenuto di tali risorse digitali. In questo scenario, diventa determinante stabilire il dispositivo sorgente che ha generato la risorsa incriminata, in modo che tale risorsa possa essere usata come prova di indagine. A seconda del contesto, stabilire la sorgente di un contenuto digitale equivale a trovare il dispositivo specifico che ha generato la risorsa incriminata, oppure a stabilire la tipologia del dispositivo sorgente (smartphone, camera digitale, ecc). Nel primo caso, determinare il dispositivo di acquisizion specifico, può portare un giudice ad accusare il possessore di tale dispositivo che ha creato la risorsa oggetto d'indagine; nel secondo caso, può quantomeno restringere il raggio d'indagine, escludendo alcune tipologia di dispositivi.
+
+E' inoltre in tale contesto che è fondamentale anche una verifica dell'integrità di una risorsa. Infatti, il possessore del dispositivo che ha creato il contenuto digitale incriminato potrebbe modificare la risorsa utilizzata come prova in modo da non poter più tracciare il dispositivo sorgente.
+
+Uno scenario più particolare, che riguarda l'autenticità di una risorsa multimediale, si ha quando il contenuto digitale viene modificato in modo tale da ingannare chi la sta guardando. Le motivazioni per tale modifica possono essere diverse, come l'esagerazione o la riduzione della gravità di un disastro o incidente avvenuto, così come cambiare il contesto della situazione in cui sono coinvolte le persone rappresentate.
+
+Gli strumenti a disposizione del Multimedia Forensics sono solamente quelli che possono essere estratti dal contenuto digitale stesso. Infatti, l'idea fondamentale dell'analisi forense di contenuti digitali si basa sulla constatazione che sia il processo di acquisizione che le operazioni di post-processing lasciano delle tracce, chiamata fingerprints. E' compito dell'analista forense analizzare tali fingerprints per determinare la storia e l'autenticità di un contenuto digitale, in modo che possa essere usato come prova in un indagine.
+
+A tal proposito, le tecniche di analisi di contenuti digitali sono principalmente basati su due approcci: l'analisi del flusso dati, che si basa principalmente nel ricerca artefatti e inconsistenze nel contenuto digitale; l'analisi dei metadati, ovvero la determinazione della loro compatibilità, completezza e consistenza rispetto al contesto in cui si suppone la risorsa sia stata creata.
+
+Le problematiche presentate sono state ampiamente trattare dalla Digital Image Forensics; per quanto riguarda invece la Digital Video Forensics la ricerca in questi campi di applicazione è ancora in fase di studio e miglioramento. La motivazione di questo divario risiede nella maggiore facilità di modificare e falsificare immagini rispetto a video digitale e nel numeroso insieme di formati di codifica a disposizione dei video (MPEG, MPEG2, H26x, VP8, ecc), contrariamente alle immagini i cui principali formati sono molti meno (JPEG, PNG, TIFF, ecc).
+
+Questa tesi propone una tecnica per l'analisi forense di video digitali basata su Gloe et al. \cite{Gloe2014S68}, il cui lavoro si basa sullo studio di alcuni standard dei formati video e nell'utilizzo della struttura interna del container di un file video. Tale scelta è giustificata dal fatto che il container di un file video è altamente fragile che quindi può contenere numerose informazioni sulla storia di un video digitale; infatti sia la fase di acquisizione che le successive fasi di post-processing o di editing del video con strumenti vari, modificano il contenuto e la struttura del container. Tale fatto può essere sfruttato sia in termini di source identification che di verifica dell'integrità.
+
+La tesi è suddivisa nei seguenti capitoli. Nel Capitolo 1 viene presentata un'introduzione al Multimedia Forensics, sia per quanto riguarda lo stato dell'arte delle tecniche sia per quanto riguarda gli standard da seguire in tutti gli aspetti delle investigazioni digitali; inoltre viene discusso in maggior dettaglio il lavoro svolto da Gloe et al. \cite{Gloe2014S68}, dando maggiori informazioni sui video file container. Nel Capitolo 2 viene presentato il metodo proposto insieme a tutti le scelte ed i dettagli implementati dello strumento realizzato. Nel Capitolo 3 viene presentato il dataset utilizzato, le motivazione e l'organizzazione dei testi effettuati; inoltre vengono mostrati e discussi i risultati ottenuti. Nel Capitolo 5 vengono raccolte le conclusioni derivanti dal lavoro svolto, discutendo inoltre possibili sviluppi.
