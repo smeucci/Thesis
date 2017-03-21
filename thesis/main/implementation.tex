@@ -1,4 +1,14 @@
-\chapter{Implementation}
+\chapter{Proposed Approach}
+
+\section{Overview}
+
+L'applicazione è la source identification ovvero dato un video vogliamo determinarne la sua origine. Da che dispositivi, servizio, piattaforma, programma viene? Siccome il file container è molto arbitraria, lascia tracce che possono essere usata per identificarne l'origine.
+Per ciascuno delle origini, o classi, di interesse viene posta una domanda binaria, ovvero: tale video proviene dall'origine X? La risposta dovrà essere una likelihood, che mi esprimerà quanto il video appartiene a quella classe; sogliando poi opportunamente la likelihood sarà possibile rispondere alla domanda binaria.
+Per ogni domanda, vengono fatte due query nel dataset di training: vengono presi un insieme di video che sappiamo rispondo true alla domanda, ovvero appartengono alla classe in oggetto, e un insieme di video complementare che corrisponde ad una classe avversaria, composta cioè da video che rispondono false alla domanda binaria.
+
+Il groundtruth viene quindi diviso in questi due set. Viene poi fatto un merge di tutti i file container (come spiegato in precedenza) in un unico file xml in modo che contenga tutti gli atomi e tutti i possibili valori degli attributi dei due set. Durante il merge, viene inizializzato il vettore dei pesi nella stringa degli attributi; ogni volta che un valore viene aggiunto si inizializza a zero il suo peso, quando troviamo il solito peso più volte il suo peso incrementa, modulato dal numero totale di video del set. Ciò serve a calcolare il potere discriminante di ciascun attributo rispetto alle due classi.
+
+A questo punto, dato in ingresso un video query di cui vogliamo determinare la classe, guardiamo i valori dei suoi attributi e per ciascuno di questi viene calcolato il rapporto fra i pesi associati a quel valore nei due set. Il numerato è il set che risponde true e il denominatore il set che risponde false. Tale rapporto ha un massimo di 1 e un minimo di zero escluso (vedi dettagli). I rapporti di tutti gli attributi vengono poi moltiplicati (ecco perchè non può essere zero); più tale prodo è maggiore di 1, più il video è sicuro appartenere al set che risponde true; più è minore di 1 e più il video è sicuro appartenere al set che risponde true, ovvero appartiene al set che risponde false.
 
 \section{Video Format Tool}
 
@@ -88,18 +98,7 @@ Durante lo sviluppo dell'applicazione sono state fatte varie scelte implementati
 `
 
 
-\section{File Origin Analysis}
-
-\subsection{Theory}
-
-L'applicazione è la source identification ovvero dato un video vogliamo determinarne la sua origine. Da che dispositivi, servizio, piattaforma, programma viene? Siccome il file container è molto arbitraria, lascia tracce che possono essere usata per identificarne l'origine.
-Per ciascuno delle origini, o classi, di interesse viene posta una domanda binaria, ovvero: tale video proviene dall'origine X? La risposta dovrà essere una likelihood, che mi esprimerà quanto il video appartiene a quella classe; sogliando poi opportunamente la likelihood sarà possibile rispondere alla domanda binaria.
-Per ogni domanda, vengono fatte due query nel dataset di training: vengono presi un insieme di video che sappiamo rispondo true alla domanda, ovvero appartengono alla classe in oggetto, e un insieme di video complementare che corrisponde ad una classe avversaria, composta cioè da video che rispondono false alla domanda binaria.
-
-Il groundtruth viene quindi diviso in questi due set. Viene poi fatto un merge di tutti i file container (come spiegato in precedenza) in un unico file xml in modo che contenga tutti gli atomi e tutti i possibili valori degli attributi dei due set. Durante il merge, viene inizializzato il vettore dei pesi nella stringa degli attributi; ogni volta che un valore viene aggiunto si inizializza a zero il suo peso, quando troviamo il solito peso più volte il suo peso incrementa, modulato dal numero totale di video del set. Ciò serve a calcolare il potere discriminante di ciascun attributo rispetto alle due classi.
-
-A questo punto, dato in ingresso un video query di cui vogliamo determinare la classe, guardiamo i valori dei suoi attributi e per ciascuno di questi viene calcolato il rapporto fra i pesi associati a quel valore nei due set. Il numerato è il set che risponde true e il denominatore il set che risponde false. Tale rapporto ha un massimo di 1 e un minimo di zero escluso (vedi dettagli). I rapporti di tutti gli attributi vengono poi moltiplicati (ecco perchè non può essere zero); più tale prodo è maggiore di 1, più il video è sicuro appartenere al set che risponde true; più è minore di 1 e più il video è sicuro appartenere al set che risponde true, ovvero appartiene al set che risponde false.
-
+\section{File Origin Analysis Tool}
 
 \subsection{Requisiti Funzionali}
 
