@@ -8,7 +8,7 @@ In digital investigations, multimedia content such as images, audio, and video a
 
 Multimedia Forensics has the aim to gain knowledge on a multimedia content life cycle exploiting the traces that the various processing steps leave on the data. In fact, the idea behind Multimedia Forensics is that each acquisition device and each processing operation on a digital resource leave on the media content data some traces, often called fingerprints, which characterize its history.
 
-Many algorithms and techniques have been developed by the scientific community based on the extraction of features from the stream of audio-visual data of the multimedia content. By taking advantage of these features, such techniques try to infer information about the source/acquisition device and about which encoding and editing processes the digital resource was subject to during its life cycle. Specifically for multimedia content such as images and videos, the main approaches set themselves the goal to identify the source of digital resource and/or to determine if the content is authentic or has been modify from its original without any a priori information about the content under analysis. This is possible using just these features and tools that allow to check for the presence or absence of such features or fingerprints that are intrinsically linked to the multimedia data by the acquisition device, the enconding step and any post-processing or editing software tools. In fact, we can distinguish three types of traces left on a multimedia content: acquisition traces, encoding traces, and editing traces.
+Many algorithms and techniques have been developed by the scientific community based on the extraction of features from the stream of audio-visual data of the multimedia content. By taking advantage of these features, such techniques try to infer information about the source/acquisition device and about which encoding and editing processes the digital resource was subject to during its life cycle. Specifically for multimedia content such as images and videos, the main approaches set themselves the goal to identify the source of digital resource and/or to determine if the content is authentic or has been modify from its original without any a priori information about the content under analysis. This is possible using just these features and tools that allow to check for the presence or absence of such features or fingerprints that are intrinsically linked to the multimedia data by the acquisition device, the encoding step and any post-processing or editing software tools. In fact, we can distinguish three types of traces left on a multimedia content: acquisition traces, encoding traces, and editing traces.
 
 As explained, from a scientific point of view, research has produced a large number of techniques for the analysis of multimedia content. From the point of view of the application of such techniques in the courtroom, however, there is an important gap that it is probably due to a lack of communication between the legal part and the scientific part, as well as a not complete maturity of the techniques that are often based on results obtained in laboratory contexts a not in real-world scenarios.
 
@@ -27,68 +27,86 @@ In this context, it becomes essential the figure of the Forensic Analyst, i.e. o
 
 \subsection{Applications}
 
-Le principali applicazione per l'analisi forense sono: la source idenfitication, l'autenticazione e l'integrità della risorsa multimediale.
+{METTERE ESEMPI PRATICI}
 
-Il processo di identificazione della sorgente ha come obbiettivo quello di recuperare informazioni riguardo il dispositivo sorgente del contenuto multimediali in esame. É possibile identificare la sorgente a vari livelli di dettaglio. Ad esempio distinguere fra tipi di sorgenti, distinguere fra differenti modelli di sorgente dello stesso tipo e distinguere fra dispositivi diverse ma dello stesso tipo e modello. Informazioni possono essere ottenuti dai metadati.
+The main applications for forensic analysis are: source identification, authentication, and integrity of the multimedia resource.
 
-Il problema dell'autenticazione riguarda il compito di stabilire se il contenuto multimediale è un accurato rendiconto di un evento originale. Il processo di analisi si basa sulla ricerca di inconsistenze nelle features del segnale audio-visivo.
+The source identification process has as objective the retrieval of information about the source device that generated the multimedia content under examination. It is possible to identify the source at various levels of detail. For example, sometimes it is possible to distinguish between types of sources, or to distinguish between different models of the same type of source, or to distinguish between different device that belong to the same type and model.
 
-Il problema dell'integrità riguarda il compito di stabilire se un contenuto multimediale è stato modificato o meno da quando è stato acquisito dal dispositivo sorgente. L'analisi si basa sulla ricerca di tracce lasciate dai tools di editing e processing durante il ciclo di vita che non sono compatibili con i contenuti provenienti dal dispositivo sorgente che è noto.
+> Information can be obtained from metadata.
+
+The authentication problem has to do with the task of determining whether the multimedia content is an accurate representation of an original event. The analysis process is typically base on finding inconsistency in the features extracted from the audio-visual signal.
+
+The integrity problem concerns the task of determining whether a multimedia content has been changed or not from the moment that it has been created by the acquisition device. The analysis is based on the search for traces left by the editing tool or post-processing step during the life cycle that are not compatible with the source device that, for this application, is known.
 
 \subsection{Tools}
 
-Un file multimediali può essere visto come un pacco composto da due parti principali: l'header, che contiene i metadati ovvero informazioni sul contenuto del file; il contenuto stesso, ovvero il flusso di dati che forma il segnale audio-visivo.
-In generale, l'estrazione di features si basa sull'analisi delle tracce lasciate sia sui dati veri e proprio che sui metadati del file multimediale.
+{FRASE DUPLICATA DA INTRODUZIONE SUI METADATI}
 
-Per quanto riguarda l'ispezione del flusso di dati, l'esaminazione consiste di due aspetti principali: l'interpretazione del contenuto, che riguarda l'analisi del contesto come comprendere cosa sta succedendo, chi sono i soggetti e gli oggetti coinvolti, informazioni sull'ambiente e tutte le informazione che derivano dall'osservazione umana; identificazione di dettagli rivelanti nella scena rappresentata, come anomalie audio-visive, features interessanti come direzione della luce, ombre, prospettiva incoerenze, segni di smudge ecc. Sempre nel contesto dell'ispezione del segnale audio-visivo, è l'analisi e l'enhancement dei contenuti, come migliorare il segnale per rilevare dettagli o oggetti rilevanti, estrazione di relazioni dimensionali come dimensioni di oggetti o soggetti, comparazione fotografica fra oggetti noti e oggetti rappresentati nella scena.
+A multimedia files can be viewed as a package composed of two main parts: the header, which contains the metadata, i.e. the information about the contents of the file; the content itself, i.e. the data stream which forms the audio-visual signal.
+In general, the feature extraction is based on the analysis of traces left on both the actual data and the metadata of the multimedia file.
 
-L'altro strumento riguarda l'estrazione e l'analisi di metadati. I metadati possono essere estratti facilmente e possono contenere molte inforamzioni riguardo il segnale audio-visivo come ad esempio (video) il dispositivo sorgente, lo spazio colore, la risoluzione, i parametri di compressione, la data, dati gps, frame rate, (audio) format tags, bit rate, sample rate, numero di canali. Ovviamente il tipo e il numero di metadati dipende dal tipo del file in esame e quali processi ha subito durante il suo ciclo di vita.Ad esempio, per quando riguarda le immagini i metadati sono estratti dall'header Image file format (Exif). Una volta ottenuti i metadati è compito dell'analista forense verificare la compatibilità, la completezza e la coerenza delle inforamzioni estratte rispetto allo scenario da cui il contenuto si suppone provenire: metadati saranno differenti se una risorsa proviene da un social network piuttosto che direttamente dal dispositivo di acquisizione.
+As for the inspection of the data stream, specifically for images and videos, the examination consists of two main aspects:
+\begin{itemize}
+\item interpretation of the content, which is the analysis of the context to understand what the data represents, who are the subjects and the objects involved, what is the environment. In general, the goal it to retrieve all the information that can be extrapolated from human observation.
+\item identification of sensible details from the scene represented, such as audio-visual anomalies, the direction of the light, shadows, perspective inconsistencies, smudge marks, and so on.
+\end{itemize}
 
+Also in the context of the inspection of the audio-visual signal, a useful technique is to enhance the content, such as the improvement of the signal to detect relevant details or objects, the extraction of dimensional relationships between subjects and objects, the photographic comparison between known objects and objects represented in the scene.
 
+The other tool regard the extraction and analysis of the metadata. Metadata can be easily extracted and can contain a lot of information regarding the data stream such as source device, color space, resolution, compression parameters, date, GPS coordinates, frame rate, format tags, bit rate, sample rate, number of channels. Obviously, the type and the number of metadata depends on the type of the file under examination and which processes has undergone during its life cycle. For example, concerning the images, metadata are typically extracted from the Image File Format header (Exif). Once the metadata is obtained it is the Forensic Analyst work to verify the compatibility, the completeness, and the consistency of this information with regards to the context in which it is known or assumed the resource come from. In fact, metadata might be different if a digital resource comes from a social network rather than directly from the acquisition device.
 
 \section{Forensic Analysis of Video File Container}
 
+{INTRODURRE GLOE}
+
 \subsection{Video File Containers}
 
-Gli standard dei formati video prescrivono un numero limitato di features, lasciando quindi molta libertà alla casa produttrice. Ciò può essere sfruttato come risorsa per identificare e autenticare, dato un video, la sorgente di provenienza. In particolare lo studio si concentra su MP4-like video format (mp4 e mov).
+The forensic analysis has focused mainly its attention on the analysis of images developing techniques that used either the data stream, the metadata (such as Exif metadata), or both.
 
-In un mondo sempre più digitale c'è sempre più la necessità di metodi per l'autenticazione dei dati multimediali, del riconoscimento della loro sorgente di provenienza e della loro storia.
+The forensic analysis of digital video is currently more and more relevant. Early work has followed procedures similar to the ones used for images, exploiting artefact and inconsistency in the data stream and/or examining the information extrapolated from the metadata.
+However, regarding the use of metadata especially for the identification of digital sources, there are concerns over falsifiability. In fact, it is just a matter of finding the right software tools, often publicly available, to easily edit high-level information such as Exif metadata.
 
-L'anilisi forense si è principalmente concentrata su l'analisi di immagini sviluppando tecniche basate su due principali approcci: analisi del rumore (PRNU); analisi dei metadati JPEG e EXIF.
+The video format standards prescribe only a limited number of features, thus leaving a lot of freedom to the manufacturer. This can be exploited by the Forensic Analyst as a resource, given a video, to identify the original source and to assess its authenticity and/or its integrity. In particular, the study will be focus on MP4-like video formats (MP4 and MOV).
 
-Anche l'analisi forense di video digitale è sempre più rilevente. I primi lavori hanno seguito un procedimento simile a quello delle immagini, basandosi rumore e artefatti presenti nel video ed anche l'utilizzo di metadati JPEG e EXIF.
-Tuttavia, riguardo all'utilizzo di metadati per l'autenticazione di sorgenti digitali, sono state espresse preoccupazioni rispetto falsicabilità. Infatti, è solo questione di trovare il giusto strumento, spesso disponibile pubblicamente, per modificare facilmente informazioni di alto livello come appunto i metadati EXIF.
+In contrast, the known tools do not allow you to change the core structures of the media, such as the video file containers. So these low-level features reduce the concerns about the falsifiability of such metadata as only for a subject in possess of advanced programming skills will be able to modify the internal structure and content of video file containers. Even in this scenario, it would be still highly difficult to preserve consistency amongst all of the metadata, thus making the operation of falsifiability not trivial even for a highly technical figure.
 
-Contrariamente, gli strumenti noti non permettono di modificare strutture core dei file multimediali, come appunto i video file containers, ed altri strumenti pubblicamente disponibili che permettano di falsificare sistematicamente i containers non sono noti. Quindi queste caratteristiche di basso livello riducono le preoccupazioni riguardo la falsificabilità di tali metadati in quanto solo in possesso di skills avanzate di programmazione sarebbe possibile modificare la struttura interna dei file video rendendo la falsificabilità un'operazione non triviale ed altamente tecnica.
+The MOV container format was introduced by Apple in 1991. Using this format as a basis, they have also been introduced MP4 and 3GP formats.
 
-Il il formato container MOV è stato introdotto da Apple nel 1991. Utilizzando questo formato come base, sono stati introdotti anche i formati MP4 e 3GP.
+The video file containers of this format are composed of atoms (or boxes) that are identified by a unique 4 bytes characters, preceded by the size of the atom. These atoms can have fields and can be nested, i.e. an atom may contain another atom. Thus, four types of atoms can be encounter:
+\begin{itemize}
+\item atoms without fields and that do not contain other atoms.
+\item atoms without fields but that contain other atoms.
+\item atoms with fields that do not contain other atoms.
+\item atoms with fields that also contain other atoms.
+\end{itemize}
 
-I file containers di questo formato sono composti da atomi (o boxes) che sono identificati caratteri unici di 4 byte, preceduti dalla dimensione dell'atomo. Tali atomi possono avere o meno dei campi e possono essere o meno nidificati, ovvero possono contenere altri atomi; quindi si incontrano 4 tipi di atomi:
-- atomi senza campi né che contengono altri atomi;
-- atomi senza campi che contengono altri atomi;
-- atomi con campi ma che non contengono altri atomi;
-- atomi con campi che contengono altri atomi;
+The most common structure of the MP4-like containers is as follows:
+\begin{itemize}
+\item \emph{ftyp} atom: it is semi-mandatory, i.e. the latest ISO standards expect it to be present and to be explicit as soon as possible in the file container. It refers to the specific file types with which the video file, to which the container belongs, is compatible.
+\item \emph{mdat} atom: it contains the data stream and specifies its size.
+\item \emph{moov} atom: it is the atom with the most complex structure of the container. It is a nested atom which contains a number of other atoms. In this atom, and in its sub-structure, are contained the metadata needed for the decoding of the data stream contained in the \emph{mdat} atom.
+\end{itemize}
 
-La struttura più comune dei MP4-like containers è la seguente:
-- atomo *ftyp*: è semi-obbligatorio, ovvero il più recente standard ISO prevede che sia presente e che venga esplicitato il prima possibile nel file container. Fa riferimento alla specifica del tipo di file con la quale il file video, a cui il container appartiene, è compatibile. I campi principali sono *majorbrand*, che indica quale specifica sia la migliore, e vari campi numerati chiamati *compatiblebrand*, che indica una specifica che è compatibile con il file video. Non contiene altri atomi.
-- atomo *mdat*: contiene lo stream dei dati ed è accompagnato dal campo *size* che ne indica la dimensione. Non contiene altri atomi.
-- atomo *moov*: è l'atomo con la struttura più complessa del container. É un atomo nificati, ovvero contiene numerosi altri atomi. In questo atomo, e nella sua sotto-struttura, sono contenuti i metadati necessari per la decodifica del flusso dati contenuto nell'atomo *mdat*.
+This structure is not always respected. The file container of the MP4-like formats are very complex and have many elements and differences that depend on the source and on the manufacturing company; thus it can constitute a valuable tool for the Forensic Analysis.
+The differences of containers across multiple types of video files can be found in many ways, as explained as follows:
+\begin{itemize}
+\item the relative position of the atoms: although the standard gives specifications about the location of specifics atoms (especially the main ones described above), these indications are not always respected. Above all, there is a change in position for those atoms whose position is not specified but the standard. This is true both at the first level of the container, that contains atoms such as \emph{ftyp}, \emph{mdata}, \emph{moov}, and both in terms of the atoms of the sub-structure contained in the \emph{moov} atom.
+\item the presense of additional non-standard atoms at all level of the container.
+\item differences in the fields values of the atoms.
+\end{itemize}
 
-Tale struttura non è sempre rispetta. I file container dei formati MP4-like sono molto complessi e presentano numerosi elementi e differenze dipendenti dalla sorgente e dalla casa manifatturiera; quindi costituiscono uno strumento prezioso per un'analista forense.
-Le differenze dei containers di diversi file video si possono presentare nei seguenti modi:
-- posizione relativi degli atomi: nonostante lo standard dia specifiche riguardo la posizione di determinati atomi (in particolare quelli principali), ciò non è sempre rispettato. Soprattutto, si ha variazione di posizione per quegli atomi la cui posizione non è specificata dallo standard. Questo discorso è valido sia al primo livello, ovvero quello contenente gli atomi *ftyp*, *mdat*, *moov*, sia per quanto riguarda gli atomi della sotto-struttura contenuta nell'atomo *moov*.
-- presenza di atomi aggiuntivi non standard ai vari livelli del container.
-- differenze nei valori dei campi contenuti negli atomi.
+All these possible differences and types of differences give rise to a large set of combinations that the Forensic Analyst can use to analyze a digital video resource.
 
-Tutte queste possibili differenze e tipi di differenze danno vita ad un numeroso insieme di combinazioni che l'analista forense può sfruttare per autenticare una risorsa video.
-
-PARLARE ANCHE DEL FORMATO AVI.
+{PARLARE ANCHE DEL FORMATO AVI}
 
 \subsection{Applications for Video File Container}
 
-Il problema dell'autenticazione si basa sull'analisi del segnale audio-visivo, quindi non è nel nostro dominio visto che usiamo i file container che sono metadati. Con i metadati non si può stabilire se il contenuto multimediale è una rappresentazione autentica di un evento originale.
+The problem of the authentication is based on the analysis of the audio-visual signal in order to determine if the data is an actual represents of an original event. Thus, it is not in our domain because video file containers are treated as metadata. With metadata, you can not assess anything about the events represented in a video.
 
-Il problema dell'integrativa invece viene affrontato. Infatti, come descritto prima, i file container di un video è il file container creato dall'ultimo strumento del ciclo di vita. Se un video è modificato anche leggermente da un software avrà un suo particolare container. Questo container conterrà atomi aggiuntivi o in posizione diversa e valori degli attributi differenti rispetto ad un video proveniente direttamente dalla sorgente. É quindi possibile confrontare un container reference, preveniente da un dispositivo noto, ed un container query, che si suppone provenire da quel dispositivo noto, per verificare se il video è stato o meno modificato.
+The integrity problem, instead, can be dealt with. As described above, the container of a video file is the container created by the last tool during the file life cycle. If a video is also slightly modified by software, it will have its own container. This container may contain additional atoms or change the positions and the fields values of the other atoms compared to the file container of the video before it was processed. Therefore, if the file container content and structure of an acquisition device is known, it is possible to compare the container of the query video file with the container of a reference video file (i.e. a video generated by the known or assumed acquisition device) in order to verify the integrity of the query video file, i.e. whether the file, during the time between its generation from the source device and the present, has been modified or not.
 
-Il problema della source classification ha senso perchè siccome gli standard definiscono solo alcune features obbligatorie, lasciano molta libertà alle case manifatturiere. Significa che ogni classe di dispositivi avrà il suo container diverso. Ciò può essere usato per distinguere fra dispositivi, nel caso di video provenienti da smarthphone, dello stesso brand, dallo stesso brand e model, dallo stesso brand, model e sistema operativo.
-Per fare ciò occorre rappresentare in qualche modo le varie classi presenti in un training set. Inoltre occorre una misura di compatibilità che stimi la probabilità di un container query di appartenere ad una determinata classe di dispositivi.
+The problem of the source classification makes sense because, since the standards define only a few mandatory features for the file container, the manufacturing companies are left with a lot of freedom. This means that every class of device will have its own different container structure and values. This can be used to construct a set of features to distinguish between devices. For examples, in the case of video created by smartphones, it can be used to determine the belonging of a video to a brand, or to a specific brand and model, or to a specific brand, model, and operating system.
+To do this, it is necessary to find a way to properly represent the various classes in a training set. In addition, there must be a compatibility measure that consider the likelihood of a query container to belong to a certain class of devices.
+
+The proposed approach in this thesis will do just that, giving all the theory and the necessary information of how to implement a pipeline to solve the integrity and the source identification problem of a video file using the its file container.
