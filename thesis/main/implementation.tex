@@ -15,7 +15,7 @@ A questo punto, dato in ingresso un video query di cui vogliamo determinare la c
 \subsection{Requisiti Funzionali}
  
 Per poter utilizzare i container dei video come strumenti di analisi, abbiamo implementato un programma che permetta di estrarli da in input un video.
-Tale programma presenta inoltre varia altre funzionalità che sono state rese disponibili sia come libreria Java che come programma da terminale, implementando sia funzioni di basso livello che di alto livello che fungono da interfaccia per il programma da terminale.
+Tale programma presenta inoltre varie altre funzionalità che sono state rese disponibili sia come libreria Java che come programma da terminale, implementando sia funzioni di basso livello che di alto livello che fungono da interfaccia per il programma da terminale.
 Le features implementate sono:
 - Parse: dato in input un file video di formato mp4-like (mp4 o mov), estrae il file container sfruttando la libreria Mp4Parser e lo salva in un file xml.
 - Batch parse: dato in input una folder, fa il parse di tutti i video presenti nella folder e nelle sottofolder, ricreato la stessa struttura delle cartelle.
@@ -58,7 +58,7 @@ Durante lo sviluppo dell'applicazione sono state fatte varie scelte implementati
 
 
 - Compare:
- la feaure compare server per confrontare due file xml e dare un  misura della differenza dei container che rappresentanto. L'applicazione pratica è l'Integrity analysis, ovvero verificare che il video è integro, ovvero il suo file container non ha subito modifiche dopo essere uscito dalla camere del dispositivo.
+ la feature compare server per confrontare due file xml e dare un  misura della differenza dei container che rappresentanto. L'applicazione pratica è l'Integrity analysis, ovvero verificare che il video è integro, ovvero il suo file container non ha subito modifiche dopo essere uscito dalla camere del dispositivo.
 
  Per confrontare i due file xml, viene scelto uno come reference e l'altro come query. In teoria, per il reference viene costruito un vettore di dimensioni pari a tutti gli elementi del tag che possono essere diversi, quindi per tutti gli attributi di tutti gli atomi (per gli atomi senza attributi abbiamo precedentemente inserito l'attributo count). Gli elementi di tale vettore sono idealmente inizializzati a 1. Per il query viene inizializzato un vettore delle stesse dimensioni. Procedendo come in precedenza, il query viene esplorato ricorsivamente cercando gli atomi del reference nel query e si hanno due casi:
  - atomo presente: vengono confrontati gli attributi, ogni attributo diverso corrisponde ad uno zero nel vettore di query ad indicare una differenza.
