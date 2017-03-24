@@ -2,77 +2,71 @@
 
 \section{Overview}
 
-L'applicazione è la source identification ovvero dato un video vogliamo determinarne la sua origine. Da che dispositivi, servizio, piattaforma, programma viene? Siccome il file container è molto arbitraria, lascia tracce che possono essere usata per identificarne l'origine.
-Per ciascuno delle origini, o classi, di interesse viene posta una domanda binaria, ovvero: tale video proviene dall'origine X? La risposta dovrà essere una likelihood, che mi esprimerà quanto il video appartiene a quella classe; sogliando poi opportunamente la likelihood sarà possibile rispondere alla domanda binaria.
-Per ogni domanda, vengono fatte due query nel dataset di training: vengono presi un insieme di video che sappiamo rispondo true alla domanda, ovvero appartengono alla classe in oggetto, e un insieme di video complementare che corrisponde ad una classe avversaria, composta cioè da video che rispondono false alla domanda binaria.
+The application is the source identification, i.e. given a video we want to determine its origin. From which devices, services, platform program the video come from? Since the file container structure has a degree of arbitrariness, it has characteristics that can be used to identify the source.
 
-Il groundtruth viene quindi diviso in questi due set. Viene poi fatto un merge di tutti i file container (come spiegato in precedenza) in un unico file xml in modo che contenga tutti gli atomi e tutti i possibili valori degli attributi dei due set. Durante il merge, viene inizializzato il vettore dei pesi nella stringa degli attributi; ogni volta che un valore viene aggiunto si inizializza a zero il suo peso, quando troviamo il solito peso più volte il suo peso incrementa, modulato dal numero totale di video del set. Ciò serve a calcolare il potere discriminante di ciascun attributo rispetto alle due classi.
+For each of the origins, or classes, of interest, we ask a binary question, namely: does that video come from the source X? The answer must be a likelihood, measured in same way, that will express the degree to which the video belongs to that class; then, thresholding appropriately the likelihood, it will be possible to respond to the binary question.
+For each question, two queries in the training dataset are made: we take a set of videos that we know belong to the class object of the question, i.e. for which the answer to the binary question will be true, and a complementary set of videos that we know do not belong to the class under examination, i.e. for which the answer is false.
 
-A questo punto, dato in ingresso un video query di cui vogliamo determinare la classe, guardiamo i valori dei suoi attributi e per ciascuno di questi viene calcolato il rapporto fra i pesi associati a quel valore nei due set. Il numerato è il set che risponde true e il denominatore il set che risponde false. Tale rapporto ha un massimo di 1 e un minimo di zero escluso (vedi dettagli). I rapporti di tutti gli attributi vengono poi moltiplicati (ecco perchè non può essere zero); più tale prodo è maggiore di 1, più il video è sicuro appartenere al set che risponde true; più è minore di 1 e più il video è sicuro appartenere al set che risponde true, ovvero appartiene al set che risponde false.
+Ground truth is then divided into these two sets. The, we merge all the file containers in a single XML file so that it contains all atoms and all possible values of the attributes of two sets. During the merge, the weight vector is initialized in the attribute string; each time a value is found, it set to zero its weight in the weights vector. When we find the same weight several times its weight increases, modulated by the total number of videos of the set. This computation serves to calculate the discriminative power of each attribute for the two classes.
+
+At this point, given a video query as input, we want to determine its class, i.e. its source device. By looking at the values of its attributes for both classes, for each of these attributes we compute the ratio of the weights associated with that value in the two sets. The numerator represents the set that responds to true and the denominator the set that returns false. This ratio has a maximum of 1 and a minimum of zero excluded (see details). The ratios of all the attributes are then multiplied (which is why it cannot be zero). The more this product is greater than 1, the more the video is sure to belong to the set that responds true; the more it is less than 1, the more the video is sure to belong to the set that answers false.
 
 \section{Video Format Tool}
 
-\subsection{Requisiti Funzionali}
+\subsection{Functional Requirements}
+
+In order to use the file containers as video analysis tools, we have implemented a program that allows extracting the file containers from an input video.
+This program also presents various other features implemented both as low-level functions, to use a simple Java library, and as high-level functions, used as interfaces for the command-line program.
+
+The implemented features are:
+\begin{itemize}
+\item[-] Parse: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the library Mp4Parser and it saves it in an XML file.
+\item[-] Batch parse: given as input a folder of video files, it parses all the videos in the folder and sub-folder, saving them by recreating the same folder structure.
+\item[-] Draw: it is used to draw in a window a tree, given an XML file as input that represents a video file container.
+\item[-] Merge: given two XML input files, it combines them into a single XML file. By taking one as the base for the merge, it adds to it the atoms that only the other XML file has; also, for atoms that are in common, it considers the attributes and, by looking at their values, it adds them to the base XML files, so that for each attributes we will have a vector of values.
+\item[-] Update: it is an advanced method to use the merge. Instead of giving two XML files as input, it takes a folder that contains XML files and merges them into a single XML as explained above. It also considers sub-folders.
+\item[-] Compare: given two XML files, it compares them and it returns a measure of how similar they are.
+\end{itemize}
+
+\subsection{Implementation} 
  
-Per poter utilizzare i container dei video come strumenti di analisi, abbiamo implementato un programma che permetta di estrarli da in input un video.
-Tale programma presenta inoltre varie altre funzionalità che sono state rese disponibili sia come libreria Java che come programma da terminale, implementando sia funzioni di basso livello che di alto livello che fungono da interfaccia per il programma da terminale.
-Le features implementate sono:
-- Parse: dato in input un file video di formato mp4-like (mp4 o mov), estrae il file container sfruttando la libreria Mp4Parser e lo salva in un file xml.
-- Batch parse: dato in input una folder, fa il parse di tutti i video presenti nella folder e nelle sottofolder, ricreato la stessa struttura delle cartelle.
-- Draw: permette di visualizzare tramite interfaccia un albero, dato in input un file xml.
-- Merge: dati in input due file xml, permette di unire tali file xml in un unico xml. Prendendo uno come base, vengono aggiunti atomi gli atomi che l'altro ha in più; inoltre per gli atomi in comune, vengono considerati gli attributi, ovvero vengono aggiunti i valori nuovi.
-- Update: come merge, ma prende in input una cartella che contiene file xml e fa il merge di tutti i file; considera anche le sottocartelle.
-- Compare: dati due file xml, li compara ovvero dà una misura di quanto sono simili.
+During the development of the application, we have made several implementation choices. In the following, it will be described the reason behind them, in addition to further details. The features that will be explained are only the main ones: parse, merge and appear:
 
+\begin{itemize}
 
-\subsection{Implementazione}
+\item[-] Parse: the parse feature uses the \emph{Mp4Parser} library (cita), Java API to read, write and create MP4 files-like.
+The high-level function is \emph{parse()}, which is used as an interface function for the command-line tool. It takes two input strings, the URL of the video file to parse and the path of the output directory where to save the created XML file. It works to make the setup for the operation, it calls the low-level \emph{parser()} function and it saves the extracted container in an XML file.
 
-Durante lo sviluppo dell'applicazione sono state fatte varie scelte implementative. Di seguito verrano spiegati tali scelte in aggiunta ad ulteriori dettagli. Le feature spiegate saranno solo quelle principali, ovvero parse, merge e compare:
+The \emph{parser()} function is what create the file container. It takes as input the ISO file of the video that we want to parse, extracted using the \emph{Mp4Parser} library. This function creates the root of the XML file (org.dom) and instantiates an object of class \emph{BoxParser}. This class is responsible for reading the ISO file recursively to extract all the atoms and their attributes. In fact, as explained above, the atoms have a nested structure. \emph{BoxParser} implements a recursive function called \emph{getBoxes()}. This work takes as input an \emph{AbstractContainerBox} and an \emph{Element} (jdom). The first parameter is passed as null in the first \emph{parser()} call and the second is the root element created in the \emph{parser()}.
 
-- Parse:
- la feature parse sfrutta la libreria Mp4Parser, a Java API to read, write and create MP4-like file.
- La funzione di alto livello è parse(), che viene utilizzata da interfaccia. Prende in ingresso due stringhe, l'url del file video da parsare e il percorso della cartella di output dove salvare il file xml. Si occupa di fare il setup per l'operazione, di chiamare la funzione di basso livello parser() e di salvare il container estratto in un file xml.
+The \emph{getBoxes()} function reads the ISO file (passed in the constructor of \emph{BoxParser}) and extracts atoms recursively. Initially, the \emph{AbstractContainerBox} is initialized to null, so the first time the atoms are obtained directly from the ISO files; these are the top-level atoms (ftyp, moov, mdat, etc.). In general, for each atom the children are extracted. It cycles on the children and, according to their 4-byte code represented by a 4-character string, it calls the right parser for that atom which can extract its attributes. Such "parser" is implemented as a \emph{Wrapper} interface that requires only a \emph{toString()} method. The wrappers implemented, in fact, call the get functions of the particular atom classes and build a string that forms the list of attributes and their value for a given atom. An attribute that has been artificially inserted in the implementation in all the atoms is the \emph{count} attribute with a fixed value to 0, which will subsequently be used only to verify if an atom is present or not. 
+ 
+For unrecognized atoms, or for atoms for which it is not recognized the name of 4 characters, it is handled by a default wrapper; the task of such wrappers is limited only to insert the attribute count. You can always extend the number of supported atoms, merely implementing a new dedicated wrapper.
 
- La funzione parser() è ciò che estrae effettivamente il file container. Prende in ingresso un file iso del video da parsare, estratto dalla libreria Mp4Parser. Questa funzione crea la base (root) del file xml (org.dom) e instanzia un oggetto di classe BoxParser. Tale classe ha il compito di leggere il file iso ricorsivamente per estrarre tutti gli atomi e i relativi attributi. Infatti, come spiegato in precedenza, gli atomi hanno una struttura nidificata. BoxParser impementa una funzione ricorsiva chiamata getBoxes(). Tale funziona prende in ingresso un AbstractContainerBox e un Element. Il primo parametro è passato come null nella prima chiamata da parser(); il secondo è il root element creato in parser().
+Once the atoms and the attributes are extracted, it is created XML element with the name equal to the 4-bye code and the attributes of the atom are set as a correspondent XML element attributes. At this point, if the atom has children, it is passed to the \emph{parser()} function, continuing the recursion. When the recursion reaches the end for a certain atom, the XML element is added to the root, which each time will be the XML element that had been passed in the recursion, up to the actual root. At this point, the ISO file parsing the video file is complete and the \emph{parser()} function has a root \emph{Element} that contains the file container represented as XML files. The \emph{parse()} function will save it to disk.
 
- La funzione getBoxes() legge il file iso (passato nel costruttore di BoxParser) ed estrae ricorsivamente gli atomi. Inizialmente il AbstractContainerBox è inizializato a null, quindi la prima volta vengono estratti gli atomi direttamente dal file iso; questi sono gli atomi di primo livello (ftyp, moov, mdat, ecc). In generale, per ogni atomo vengono estratti i figli. Viene ciclato sui figli e, in base al loro codice di 4byte rappresentato da una stringa di 4 caratteri, viene chiamato il giusto parser per quell'atomo che è in grado di estrarre i suoi attributi. Tali "parser" implementano l'interfaccia Wrapper che ha un solo metodo toString(). I wrapper implementati chiamano infatti le funzioni get degli atomi specifici e costruiscono una stringa che costituirà la lista degli attributi e dei loro valor dell'atomo. Un attributo che è stato inserito artificiosamente nell'implementazione a tutti gli atomi è l'attributo *count* con valore fisso a 0, che servirà successivamente solo per verificare se un atomo è presente o meno.
+Some implementation details:
+- To consider the position of the atoms in the container, a variable that assigns a number to each atom child is used, so as to assign an ordering to these children. This numbering is done so that it can be recognized the difference in position between atoms of two videos. The moov atom XML will no longer match the tag XML \emph{moov} but for example \emph{moov-2}. Two atoms \emph{moov} in a different position in the container are considered completely different and help significantly in the discrimination of video files using the file containers.
+- The position of the attributes of atoms is not considered. Whether it exploited the \emph{toString()} function of \emph{Mp4Parser} library or the one implemented in the \emph{Wrappers}, the order of attributes is still arbitrarily decided by either one of these two proxies and has nothing to do with the choice of the manufacturer as is the case for the order of the atoms.
 
- Gli atomi non riconosciuti, ovvero per il quale non è riconosciuto il nome di 4 caratteri, vengono gestiti dal un wrapper di default; tale wrapper si limita a inserire solo l'attributo *count*. É sempre possibile estendere il numero di atomi supportati, semplicemente implementando un nuovo wrapper dedicato.
+\item[-] Merge: this feature combines two XML files which represent the file containers. It will be used later during the training phase.
 
- Una volta estratti gli attributi viene creato l'elemento xml col nome uguale al codice e vengono settati gli attributi dell'atomo come attributi dell'elemento xml corrispondente. A questo punto, se l'atomo ha figli viene passato alla funzione parser(), continuando la ricorsione. Quando la ricorsione per un certo atomo arriva alla fine, l'elemento xml viene aggiunto al root, che ogni volta sara l'elemento xml che era stato passato nella ricorsione, fino ad arrivare al root vero e proprio. A questo punto, il parsing del file iso del file video è terminato e la funzione parser() ha un Element root che contiene il file container rappresentato come file xml. La funzione parse() si occuperà di salvarlo su disco.
+Given two XML file as inputs, the first is taken as the basis. The second is explored recursively and each atom is checked whether it is present or not in the base file. If it is present in both, it proceeds to compare the values of the attributes. If in the second file, it is found a different value for an attribute, it is added to the base file, and then creating a vector of values for that attribute. Along with a vector of values for each attribute, it is create a vector of weights, initialized to zero, the size same as the first vector. If it is not present, the atom of the second file is added to the base file along with its attributes.
 
- Alcuni dettagli implementativi:
- - per considerare la posizione degli atomi nel container, viene utilizzata una variabile che da assegna un numero ad ogni atomo figlio, in modo da assegnare un ordinamento a tali figli. Ciò fa in modo che possa essere riconosciuta la differenza di posizione fra atomi di due video, utile successivamente. L'atomo *moov* nell'xml non corrisponderà più al tag xml *<moov>* ma ad esempio *<moov-2>*. Due atomi *moov* in posizione diversa nel container sono considerati completamente diversi e aiutano notevolmente nella discriminazione dei file video usando i container.
- - la posizione degli attributi degli atomi non è considerata. Sia che venga sfruttata la funzione toString della libreria Mp4Parser che quella implementata nei wrapper, l'ordine degli attributi è comunque arbitrariamente decisi da uno di questi due proxy e non ha niente a che vedere con la scelta della casa produttrice come invece avviene per l'ordine degli atomi.
+The procedure then proceeds recursively, like in the parse feature. Since the merge produces an XML file as output, the merge can be done using an XML file of a video and the XML file produce as output by a previous merge. The only differences is that when will compare the values of the attributes, it will not have to check if the value is different, but rather if the value of the attribute for the second XML file is present in the vector of values for that attribute in the base file. 
 
+\item[-] Compare: this feature serves to compare two XML files and give a measure of the difference of file containers they represent. The practical application is the Integrity Verification, i.e. determine whether the video is intact, in particular if its file container has not been altered after the acquisition device created it.
 
-- Merge:
- tale feature, unisce due file xml che rappresentato file container. Verrà utilizzata in seguito nella fase di training.
+To compare two XML files, one is chosen as a reference and the other as a query. In theory, for the reference it is constructed a vector of size equal to the number of elements that can be different, namely all the attributes of all the atoms (for the atoms without attributes it will be considered only the count attribute). The elements of this vector are ideally initialized to 1. For the query is initialized a vector of the same size. Proceeding as before, the reference is explored recursively searching for difference with the query. If the atom is present, the attributes are compared, each different attribute corresponds to a zero in the query vector indicating a difference. If the atom is not present, then it will put as many zeros as the number of attributes for that particular atom of the reference.
 
- Dato in input due file xml, viene preso il primo come base. Viene esplorato ricorsivamente il secondo e per ogni atomo viene verificato se è presente o meno nel file base:
- - se è presente in entrambi, si procede a confrontare i valori degli attributi. Se nel secondo file, dato un attributo, viene trovato un valore diverso, questo viene aggiunto al file base, creando quindi un vettore di valori per tale attributo. Al "valore" dell'attributo, che è una stringa, viene anche inserito un vettore di pesi, inizializzati a zero, di dimensione pari al primo vettore.
- - se non è presente, l'atomo del secondo file, viene aggiunto al file base insieme ai suoi attributi.
+In the end, we obtain two vectors of the same size, one of ones and the other of ones and zeros with a zero indicating a difference.
+Since doing the Euclidean distance between two vectors of binary values, in which one is all initialized to one, equals to simply count the number of zeros that are present in the second vector and then computing the square root, instead of creating these vectors, we only incremented a variable for each difference found.
+Besides the number of differences, it is also calculated the total number of attributes of the XML file reference. The final results will be a percentage of difference, compute by dividend the number of differences found with the total number of attributes.
 
- La procedura procede poi ricorsivamente, in maniera simile alla feature parse.
- Dato che il merge produce un file xml come output, il merge può essere fatto tra un file xml di un video e il file xml dato in output ad un merge precedente. L'unica differeza è che quando verranno confrontanti i valori deli attributi, non dovrò più verificare se il valore è diverso, ma se il valore dell'attributo del secondo file è presente nel vettore di valori per quell'attributo nel file base.
-
-
-- Compare:
- la feature compare server per confrontare due file xml e dare un  misura della differenza dei container che rappresentanto. L'applicazione pratica è l'Integrity analysis, ovvero verificare che il video è integro, ovvero il suo file container non ha subito modifiche dopo essere uscito dalla camere del dispositivo.
-
- Per confrontare i due file xml, viene scelto uno come reference e l'altro come query. In teoria, per il reference viene costruito un vettore di dimensioni pari a tutti gli elementi del tag che possono essere diversi, quindi per tutti gli attributi di tutti gli atomi (per gli atomi senza attributi abbiamo precedentemente inserito l'attributo count). Gli elementi di tale vettore sono idealmente inizializzati a 1. Per il query viene inizializzato un vettore delle stesse dimensioni. Procedendo come in precedenza, il query viene esplorato ricorsivamente cercando gli atomi del reference nel query e si hanno due casi:
- - atomo presente: vengono confrontati gli attributi, ogni attributo diverso corrisponde ad uno zero nel vettore di query ad indicare una differenza.
- - atomo non presente: vengono messi tanti zero quanti sono gli attributi dell'atomo del reference.
-
- Alla fine, otterremo due vettori della stessa dimensioni, uno di uni e l'altro di uni e zeri con gli zeri che indicano le differenze.
- Siccome fare la distanza euclidea fra due vettori di valori {0, 1} in cui uno è tutto inizializzato a uno corrisponde semplicemente a contare il numero di zeri presenti nel secondo vettore e poi fare la radice quadrata, invece di creare questi vettori, semplicemente viene incrementata una variable per ogni differenza trovata.
- Oltra al numero di differenze, viene calcolato anche il numero totale degli attributi, quindi delle potenziali differenze, del file xml reference.
-
- La feature compare restitutisce infine un json con i seguenti campi: reference, query, tot, diff. (spiegare nomi).
-
-
-- Albero:
- serve per rappresentare i file xml come oggetti da manipolare con più facilità. Ogni tag del file xml è un Node o un Leaf, classi che implementano l'interfaccia Tree. Ogni Tree ha delle variabili per idenficarla (code), un padre (per il root è null), una lista di altri tree (i figli) e una lista di fields (gli attributi dell'atomo corrispondente).
+The feature compare finally returns a JSON file with the following fields: reference, query, tot, diff, attributes.
+\end{itemize}
+ 
+In order to represent the XML files as objects, each XML file (DOM object) will be cast to a custom class called \emph{Tree}, so that they can be manipulated more easily accordingly to our needs. Each XML files tag is a \emph{Node} or a \emph{Leaf}, both classes that implements the \emph{Tree} interface. Each \emph{Tree} has variables for identification (the 4-byte code, converted as \emph{String}), a father (the root that is \emph{Null} object), a list of children trees and a list of fields, that correspond to the attributes of the atom.
 
 \subsection{Command Line Tool}
 
@@ -100,7 +94,7 @@ Durante lo sviluppo dell'applicazione sono state fatte varie scelte implementati
 
 \section{File Origin Analysis Tool}
 
-\subsection{Requisiti Funzionali}
+\subsection{Functional Requirements}
 
 L'implementazione della teoria è stata realizzata con un'applicazione java da utilizzare da terminale. Le funzionalità principale sono:
 - Training: si occupa prendere i due set considerati e di fare il merge di tutti i file xml. Inoltre calcola il potere discriminante di ciascun attributo relativamente ad entrambi i set.
