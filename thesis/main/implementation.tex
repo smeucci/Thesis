@@ -2,94 +2,180 @@
 
 \section{Overview}
 
-The application is the source identification, i.e. given a video we want to determine its origin. From which devices, services, platform program the video come from? Since the file container structure has a degree of arbitrariness, it has characteristics that can be used to identify the source.
+Our method specifically focused on Source Identification and Integrity Verification. In the following, we will explain the theory behind our proposed approach, that is the main idea of why and how to use video file containers for Multimedia Forensics.
 
-For each of the origins, or classes, of interest, we ask a binary question, namely: does that video come from the source X? The answer must be a likelihood, measured in same way, that will express the degree to which the video belongs to that class; then, thresholding appropriately the likelihood, it will be possible to respond to the binary question.
-For each question, two queries in the training dataset are made: we take a set of videos that we know belong to the class object of the question, i.e. for which the answer to the binary question will be true, and a complementary set of videos that we know do not belong to the class under examination, i.e. for which the answer is false.
+As mentioned in the previous chapters, video file containers contains structured information about the content such as content-related metadata (acquisition time, modification time, place, etc.), number of tracks and signals (audio and video), and codec data (quantization tables, etc.) that is necessary to decode and present the signal. Since the file format standards leave room for freedom to the manufacturers about how the file container is composed, we can harness both its content and, mostly, its structure. The idea behind the use of file containers is that both the source device or the platform from which a video originates leave traces on its containers, so that we can determine its history.
 
-Ground truth is then divided into these two sets. The, we merge all the file containers in a single XML file so that it contains all atoms and all possible values of the attributes of two sets. During the merge, the weight vector is initialized in the attribute string; each time a value is found, it set to zero its weight in the weights vector. When we find the same weight several times its weight increases, modulated by the total number of videos of the set. This computation serves to calculate the discriminative power of each attribute for the two classes.
+For Source Identification, we are in this scenario: given a query video we want to assess if it belong to a class $C$ based on its file container, where for a class we mean a source of origin. Specifically, during this thesis, we have focused our study on video file generated from smartphones. In this case, we can imagine the possible classes as having a hierarchic structure; so a class could be seen a specific brand, a specific model of a certain brand, or a specific operating system on a certain brand of some brand of smartphones.
 
-At this point, given a video query as input, we want to determine its class, i.e. its source device. By looking at the values of its attributes for both classes, for each of these attributes we compute the ratio of the weights associated with that value in the two sets. The numerator represents the set that responds to true and the denominator the set that returns false. This ratio has a maximum of 1 and a minimum of zero excluded (see details). The ratios of all the attributes are then multiplied (which is why it cannot be zero). The more this product is greater than 1, the more the video is sure to belong to the set that responds true; the more it is less than 1, the more the video is sure to belong to the set that answers false.
+Basically, given a query video and a class $C$, we pose a binary question: does this query video belongs to the class $C$? In order to answer that question, we split the ground truth set of videos in two classes $X_{C}$ and $X_{\overline{C}}$, i.e. of videos belonging to class $C$ and not respectively.
+
+To determine which of the two classes the query video belongs, we need a compatibility score. We create $\Omega$ that is the set of all the attributes $\omega$ of the atoms contained in each file containers of the ground truth media. We determine the discrimination power of each attributes $\omega$ for the class $C$,
+
+$$  W_{C}(\omega) = \dfrac{\sum\limits_{i=1}^{N_{C}}\mid X_{i} \cap \omega \mid}{N_{C}} $$
+
+with $X_{i} \in X_{C}$ and $N_{C}$ the number of videos of the ground truth that belongs to the class $C$.
+
+Similarly, we compute the discrimination power of each attributes $\omega$ for the classe $\overline{C}$,
+
+$$  W_{\overline{C}}(\omega) = \dfrac{\sum\limits_{i=1}^{N_{\overline{C}}}\mid X_{i} \cap \omega \mid}{N_{\overline{C}}} $$
+
+with $X_{i} \in X_{\overline{C}}$ and $N_{\overline{C}}$ the number of videos of the ground truth that belongs to the class $\overline{C}$.
+
+With the discrimination power, we can determine how significant an attribute is for a certain class.
+
+The procedure described above is what we refer to as the training phase. For the test phase, given a query video $X = \left\lbrace \omega_{1},...,\omega_{n} \right\lbrace $, we solve the two hypothesis test problem:
+
+$$  H_{0}:X \in \overline{C} $$
+$$  H_{1}:X \in C $$
+
+The we determine the likelihood of observing $\omega_{j} \in X, j = 1,...,t$ for each of the two classes.
+
+$$ P(\omega_{j}\vert H_{0}) = \Omega_{\overline{C}}(\omega_{j}) $$
+$$ P(\omega_{j}\vert H_{1}) = \Omega_{C}(\omega_{j}) $$ 
+
+Supposing, that $\omega_{j}$ are independently distributed we can compute a likelihood
+
+$$ L(X) = \dfrac{\prod\limits_{\omega_{j}} \Omega_{C}(\omega_{j} }{\Omega_{\overline{C}}(\omega_{j}} $$
+
+to determine whether a query video $X$ to belong to the class $C$.
+
+For Integrity Verification, the approach is simpler because we don't need to deal with classes. In this scenario, we have a query video $X$ that supposedly come from a certain device and we want to assess if this supposition is true or if the video has undergone some other processing step during its lifecycle. In order to do that, we create a reference video $Y$ with the device that supposedly is the source of the video $X$; to assess the integrity, we need to determine the compatibility of the file containers of the query video $X$ with the file container of the reference video $Y$. 
+
+For each attributes of $Y$, we check their presence in the file containers of $X$; then we do the same operation in reverse, that is checking the presence of the attributes of $X$ in the file containers of $Y$. The results will be a percentage representing a measure of compatibility between query and reference, i.e. by how much the two file containers under examination differs. It will be up to the Forensic Analysis, by also checking for which attributes the two file containers differ, to determine if this compatibility score is enough to assess the integrity of the query video or not.
+
+In order to put into place the described approaches, we developed several applications that can be used both as a Java library and a command-line tool. Finally, we implemented a web application so that a user can utilize these methods more easily.
 
 \section{Video Format Tool}
 
-\subsection{Functional Requirements}
+\subsection{Features}
 
-In order to use the file containers as video analysis tools, we have implemented a program that allows extracting the file containers from an input video.
-This program also presents various other features implemented both as low-level functions, to use a simple Java library, and as high-level functions, used as interfaces for the command-line program.
+The Video Format Tool is a software application that we have implemented mainly to extract the file container from an input video. However, this program also presents various other features which serve to manipulate file containers; these features are both implemented as low-level functions, so that they can be used as functions from a Java library, and as high-level functions, that are used as interfaces for the command-line tool.
 
 The implemented features are:
 \begin{itemize}
-\item[-] Parse: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the library Mp4Parser and it saves it in an XML file.
-\item[-] Batch parse: given as input a folder of video files, it parses all the videos in the folder and sub-folder, saving them by recreating the same folder structure.
+\item[-] Parse: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the \emph{MP4Parser} library \cite{mp4parser} and it saves it in an XML file, using the \emph{JDOM} library \cite{jdom}.
+\item[-] Batch parse: given as input a folder containing video files, it parses all the videos in the folder and sub-folder, saving them into XML files by recreating the same folder structure.
 \item[-] Draw: it is used to draw in a window a tree, given an XML file as input that represents a video file container.
 \item[-] Merge: given two XML input files, it combines them into a single XML file. By taking one as the base for the merge, it adds to it the atoms that only the other XML file has; also, for atoms that are in common, it considers the attributes and, by looking at their values, it adds them to the base XML files, so that for each attributes we will have a vector of values.
 \item[-] Update: it is an advanced method to use the merge. Instead of giving two XML files as input, it takes a folder that contains XML files and merges them into a single XML as explained above. It also considers sub-folders.
-\item[-] Compare: given two XML files, it compares them and it returns a measure of how similar they are.
+\item[-] Compare: given two XML files, it compares them and it returns a measure of how much they differ.
 \end{itemize}
 
 \subsection{Implementation} 
  
 During the development of the application, we have made several implementation choices. In the following, it will be described the reason behind them, in addition to further details. The features that will be explained are only the main ones: parse, merge and appear:
 
-\begin{itemize}
+\subsubsection{Parse}
 
-\item[-] Parse: the parse feature uses the \emph{Mp4Parser} library (cita), Java API to read, write and create MP4 files-like.
-The high-level function is \emph{parse()}, which is used as an interface function for the command-line tool. It takes two input strings, the URL of the video file to parse and the path of the output directory where to save the created XML file. It works to make the setup for the operation, it calls the low-level \emph{parser()} function and it saves the extracted container in an XML file.
+The \emph{parse} feature make use of the \emph{Mp4Parser} library, a Java API to read, write and create MP4-like files.
 
-The \emph{parser()} function is what create the file container. It takes as input the ISO file of the video that we want to parse, extracted using the \emph{Mp4Parser} library. This function creates the root of the XML file (org.dom) and instantiates an object of class \emph{BoxParser}. This class is responsible for reading the ISO file recursively to extract all the atoms and their attributes. In fact, as explained above, the atoms have a nested structure. \emph{BoxParser} implements a recursive function called \emph{getBoxes()}. This work takes as input an \emph{AbstractContainerBox} and an \emph{Element} (jdom). The first parameter is passed as null in the first \emph{parser()} call and the second is the root element created in the \emph{parser()}.
+The Video Format Tool, 
 
-The \emph{getBoxes()} function reads the ISO file (passed in the constructor of \emph{BoxParser}) and extracts atoms recursively. Initially, the \emph{AbstractContainerBox} is initialized to null, so the first time the atoms are obtained directly from the ISO files; these are the top-level atoms (ftyp, moov, mdat, etc.). In general, for each atom the children are extracted. It cycles on the children and, according to their 4-byte code represented by a 4-character string, it calls the right parser for that atom which can extract its attributes. Such "parser" is implemented as a \emph{Wrapper} interface that requires only a \emph{toString()} method. The wrappers implemented, in fact, call the get functions of the particular atom classes and build a string that forms the list of attributes and their value for a given atom. An attribute that has been artificially inserted in the implementation in all the atoms is the \emph{count} attribute with a fixed value to 0, which will subsequently be used only to verify if an atom is present or not. 
- 
-For unrecognized atoms, or for atoms for which it is not recognized the name of 4 characters, it is handled by a default wrapper; the task of such wrappers is limited only to insert the attribute count. You can always extend the number of supported atoms, merely implementing a new dedicated wrapper.
+To explain how the \emph{parse} feature is implemented, we will follow the process of extraction of a file container from the input of a video to the creation of the corresponding XML file.
 
-Once the atoms and the attributes are extracted, it is created XML element with the name equal to the 4-bye code and the attributes of the atom are set as a correspondent XML element attributes. At this point, if the atom has children, it is passed to the \emph{parser()} function, continuing the recursion. When the recursion reaches the end for a certain atom, the XML element is added to the root, which each time will be the XML element that had been passed in the recursion, up to the actual root. At this point, the ISO file parsing the video file is complete and the \emph{parser()} function has a root \emph{Element} that contains the file container represented as XML files. The \emph{parse()} function will save it to disk.
+First, the function \emph{parse()} is called; this function servers as an interface for the command-line application to extract a file container from a MP4-like video and parse it into an XML file. It takes two String as parameters: the first representing the path of the file video that we want to parse, and the second representing the path of the directory where to save the resulting XML files. After validating the input file path, using the \emph{MP4Parser} library, it extracts the ISO file from the input video. Then it called the \emph{parser()} function, passing the extracted ISO file.
 
-Some implementation details:
-- To consider the position of the atoms in the container, a variable that assigns a number to each atom child is used, so as to assign an ordering to these children. This numbering is done so that it can be recognized the difference in position between atoms of two videos. The moov atom XML will no longer match the tag XML \emph{moov} but for example \emph{moov-2}. Two atoms \emph{moov} in a different position in the container are considered completely different and help significantly in the discrimination of video files using the file containers.
-- The position of the attributes of atoms is not considered. Whether it exploited the \emph{toString()} function of \emph{Mp4Parser} library or the one implemented in the \emph{Wrappers}, the order of attributes is still arbitrarily decided by either one of these two proxies and has nothing to do with the choice of the manufacturer as is the case for the order of the atoms.
+The \emph{parser()} function is used to parse an ISO file into a \emph{JDOM Element}. Firstly, it creates a root \emph{JDOM Element} and then it calls the constructor for the \emph{BoxParser} class, passing the ISO file. Finally, it calls the \emph{getBoxes()} method of the \emph{BoxParser} object.
 
-\item[-] Merge: this feature combines two XML files which represent the file containers. It will be used later during the training phase.
+The \emph{getBoxes()} method is a recursive function that takes as parameters: an \emph{AbstractContainerBox} object, from the \emph{MP4Parser} library, that represents an abstract base class that is suitable for boxes (i.e. atoms) of the file container that act as container for other boxes; the root \emph{JDOM Element} created by the \emph{parser()} function.
+The first time that this method is called, the first parameter will be a \emph{Null} object. It will extract a list of children boxes from the ISO file. The boxes extracted from the ISO file will be the boxes at the first level of nesting of the file containers, generally ftyp, mdat and moov boxes.
+For each child box, it creates a new \emph{JDOM Element} using as a name the identifier of the box, i.e. the 4-byte code. Then, it extracts and parse the attributes of the box and will set them as fields of the \emph{JDOM Element}. At this point, there is the recursive step: if the box under examination is also a container of other boxes, the \emph{getBoxes()} method will be called again this time passing the box as an \emph{AbstractContainerBox} instead of null, and the newly created \emph{JDOM Element}, that will act as a root for the lower levels of the file containers; if the box does not contain other boxes then the newly created \emph{JDOM Element} is added to the root and a new child box will be parsed.
+At the end of the recursion, the first \emph{JDOM Element} that we passed from the \emph{parser()} function, will contain all the information about the file container, preserving its tree-like structures and its attributes values.
 
-Given two XML file as inputs, the first is taken as the basis. The second is explored recursively and each atom is checked whether it is present or not in the base file. If it is present in both, it proceeds to compare the values of the attributes. If in the second file, it is found a different value for an attribute, it is added to the base file, and then creating a vector of values for that attribute. Along with a vector of values for each attribute, it is create a vector of weights, initialized to zero, the size same as the first vector. If it is not present, the atom of the second file is added to the base file along with its attributes.
+Finally, the flow of execution will return to the \emph{parse()} function which will ensure that the \emph{JDOM Element} will be saved in an XML file in the passed output folder.
 
-The procedure then proceeds recursively, like in the parse feature. Since the merge produces an XML file as output, the merge can be done using an XML file of a video and the XML file produce as output by a previous merge. The only differences is that when will compare the values of the attributes, it will not have to check if the value is different, but rather if the value of the attribute for the second XML file is present in the vector of values for that attribute in the base file. 
+During the development of this application, several implementations choices were made that we will explain in the following.
 
-\item[-] Compare: this feature serves to compare two XML files and give a measure of the difference of file containers they represent. The practical application is the Integrity Verification, i.e. determine whether the video is intact, in particular if its file container has not been altered after the acquisition device created it.
+The parsing of the attributes for each box takes place using some wrapper functions. In fact, the \emph{MP4Parser} library implements a \emph{toString()} method for each specific \emph{Box} class; however this method is not always consistent and it will not be even present for some box types. To overcome this issue, we realize a \emph{Wrapper} interface that require the implementation of said \emph{toString()} method. For each of the Box types that we encounter, we created the corresponding wrapper classes that implement the Wrapper interface, as well as a default \emph{Wrapper} class that deals with unrecognized boxes. This way, we have full control over the \emph{toString()} method and how the attributes of a box are retrieve. One way that we customized the extraction of the attributes, it is the addition of an attributes to each box; we add an attribute called count in order to determine the presence or the absence of the boxes, that will be useful afterwards, especially for boxes that do not have attributes.
+Also, it extensible in the sense that, if we are in the presence of a new box that we previously never encounter, we can easily implement its wrapper class and its \emph{toString()} method.
 
-To compare two XML files, one is chosen as a reference and the other as a query. In theory, for the reference it is constructed a vector of size equal to the number of elements that can be different, namely all the attributes of all the atoms (for the atoms without attributes it will be considered only the count attribute). The elements of this vector are ideally initialized to 1. For the query is initialized a vector of the same size. Proceeding as before, the reference is explored recursively searching for difference with the query. If the atom is present, the attributes are compared, each different attribute corresponds to a zero in the query vector indicating a difference. If the atom is not present, then it will put as many zeros as the number of attributes for that particular atom of the reference.
+One of the aspects that make file containers a valuable resource for the forensic analysis is the presence of low-level characteristics such as its structure and the locations of each atom in the containers. To take advantage of this feature, the name of each \emph{JDOM Element} object will be formed by the 4-byte code of the corresponding atom along with a index number that represents the relative position with respect to the other children. This is especially useful for exploit the differences in the container structure: if two file container have a different order for, as an example, the \emph{ftyp}, \emph{mdat} and \emph{moov} atoms, then, by using this indexing, we will be able to notice and harness the variation in the container structure.
 
-In the end, we obtain two vectors of the same size, one of ones and the other of ones and zeros with a zero indicating a difference.
-Since doing the Euclidean distance between two vectors of binary values, in which one is all initialized to one, equals to simply count the number of zeros that are present in the second vector and then computing the square root, instead of creating these vectors, we only incremented a variable for each difference found.
-Besides the number of differences, it is also calculated the total number of attributes of the XML file reference. The final results will be a percentage of difference, compute by dividend the number of differences found with the total number of attributes.
+Instead, the position of the attributes of each atom is not relevant. Whether it is used the toString() functions of the Mp4Parser library or the one that we implemented as classes that extend a Wrapper interface, the order of the attributes is still arbitrarily decided by either one of the two proxies. This fact means that the order has nothing to do with choices that the manufacturer made and it cannot help to determine the source device or platform of a video file.
 
-The feature compare finally returns a JSON file with the following fields: reference, query, tot, diff, attributes.
-\end{itemize}
- 
-In order to represent the XML files as objects, each XML file (DOM object) will be cast to a custom class called \emph{Tree}, so that they can be manipulated more easily accordingly to our needs. Each XML files tag is a \emph{Node} or a \emph{Leaf}, both classes that implements the \emph{Tree} interface. Each \emph{Tree} has variables for identification (the 4-byte code, converted as \emph{String}), a father (the root that is \emph{Null} object), a list of children trees and a list of fields, that correspond to the attributes of the atom.
+\subsubsection{Tree interface}
+
+In order to represent the XML files as objects, from each \emph{JDOM Element} can be built a custom \emph{Tree} object, so that they can be manipulated more easily accordingly to our needs.
+
+The \emph{Tree} interface is implemented in order to maintain the same nested structure of a XML file that represents a file containers. It is used as the \emph{Component} class in the \emph{Composite} pattern to implements trees. Such as a file container or a XML file, a tree can have children, which are other sub-tree, and fields, which are couples of name and value.
+
+Each tag of an XML file can be a \emph{Node} or a \emph{Leaf}, both classes that implements the \emph{Tree} interface. Each \emph{Tree} object has a name for identification, a String variable whose value is taken from the name of the tag, a father, that is another Tree object or a \emph{Null} object for the root Tree object, a list of children Tree objects and a list of Field objects, that correspond to the attributes of XML tag.
+
+The \emph{Tree} interface also requires many feature to add, remove, retrieve and modify each \emph{Tree} object along with its children and its list of \emph{Field} objects.
+
+\subsubsection{Merge}
+
+The \emph{merge} feature combines two XML files, representing two file containers, and merges them into a single XML file. It is the features that will be used, during the training phase, to create $\Omega$, the set of all the attributes $\omega$ of the atoms contained in each file container of the ground truth videos.
+
+The \emph{merge()} function serves as an interface for the command-line program to merge two XML files into a single one. It takes as parameters two \emph{String} representing the path of the first XML file and the path of the second XML files, respectively.
+
+Firstly, it creates two Tree objects from the input XML files; then it proceeds to call the \emph{mergeTree()} function, by passing to it the two \emph{Tree} objects. The first \emph{Tree} object is taken as the base to which the elements of the second \emph{Tree} object will be added. The function begins by extracting the children of the second \emph{Tree} object; for each child, it checks its presence in the first \emph{Tree} object.
+If it is not present it will add that child \emph{Tree} object to the first \emph{Tree} object at the corresponding level and by setting the right father.
+If it is present, it will check the fields of the corresponding child in the first and second \emph{Tree} object. For each field couple, it will compare their values and, if they differ, it will add it to the values of that particular field for the first Tree object. This way the first Tree object will have fields values that represent vector of values.
+
+The function now proceeds recursively; the \emph{mergeTree()} function will be called again by passing the corresponding child in each of the \emph{Tree} objects. The recursion will stop once it will have reach the \emph{Leaf} object for each of the tree branches.
+
+The final results will be contained in the first \emph{Tree} object passed, that now represents the union of the two XML files, both in terms of atoms and of attributes values.
+
+Then, the merge() function will save the resulting merged \emph{Tree} object into an XML file.
+
+Since the result is of \emph{mergeTree()} in another \emph{Tree} object, this features can be used repeatedly to merge many XML files by adding to the same merged one. This merged XML files represents the $\Omega$ set.
+
+\subsubsection{Compare}
+
+The \emph{compare} feature serves to compare two XML files and give a measure of how much the file containers they represent differ. It is the feature used to verify the integrity of query video by confronting it to a reference video for which the source device is known.
+
+Similar as for the other features, the \emph{compare()} function serves as an interface for the command-line program. It takes as parameters two \emph{String} representing the path of the first XML file and the path of the second XML files, respectively.
+
+The first input XML file represents the video that will be taken as a reference and the second input will represent the query video. Both XML files are converted into two Tree objects and are passed to the \emph{compareTree()} function. The \emph{compareTree()} is a recursive function that behaves similarly to the previously mentioned recursive functions: it iterates through the reference Tree object children and checks for difference for each of the corresponding child in the query video. If there is not a corresponding child, then all the attributes of the child of the reference Tree object will be counted as difference. If there is a corresponding child, it will be counted a difference every time that a pair of attributes from the reference Tree object and the query Tree object differs in their values. Also, attributes for which a difference is found are saved in a list, along with the corresponding values from both of the Tree object.
+
+Besides the number of differences, it is also counted the total number of attributes of the reference Tree object. The final results will be a percentage, computed dividing the number of differences found with the total number of attributes, that represents how much the two file containers differ.
+
+The results are then returned as JSON formatted output.
 
 \subsection{Command Line Tool}
 
-`usage: vft [-b | -c | -d | -h | -m | -p | -u]    [-i <file|folder>] [-i2
-       <file>]  [-o <folder>]   [-wa]
- -b,--batch                 batch parse a directory of video files; it
-                            recreates the same folder structure
- -c,--compare               compare two xml files
- -d,--draw                  draw a tree from an xml file
- -h,--help                  print help message
- -i,--input <file|folder>   video file for --parse, xml file for --draw
-                            and --compare, a folder for --batch and
-                            --update-config
- -i2,--input2 <file>        second xml file for --merge and --compare
- -m,--merge                 merge two xml file into one
- -o,--output <folder>       output folder for the xml file,for --parse,
-                            --merge and --update-config
- -p,--parse                 parse a video file container into a xml file
- -u,--update-config         merge all files in the dataset folder into a
-                            config.xml file
- -wa,--with-attributes      whether to consider attributes in --merge and
-                            --update-config or not. Default is false
-`
+In the following section, we will explain how to use the command-line interface for the Video Format Tool by giving some examples of usage.
+
+\begin{itemize}
+
+\item[-] Extract a file container from a video and save it into an XML file.
+\begin{lstlisting}
+vft --parse -i input.mp4 -o /output_folder
+\end{lstlisting}
+
+\item[-] Batch parse a directory of videos. It also recreates the same sub-folders structure.
+\begin{lstlisting}
+vft --batch -i /input_folder -o /output_folder
+\end{lstlisting}
+
+\item[-] Draw a tree from an input XML file.
+\begin{lstlisting}
+vft --draw -i input.xml
+\end{lstlisting}
+
+\item[-] Merge two XML files, with or without consider the attributes.
+\begin{lstlisting}
+vft --merge -wa -i input.xml -i2 input2.xml -o /output_folder
+\end{lstlisting}
+
+\item[-] Merge all XML files in a given directory into a single XML file saved in the output folder, with or without attributes. It also considers XML files in sub-directories.
+\begin{lstlisting}
+vft --update-config -wa -i /input_folder -o /output_folder
+\end{lstlisting}
+
+\item[-] Compare two XML files and return a measure of how much they differ.
+\begin{lstlisting}
+vft --compare -i input.xml -i2 input2.xml
+\end{lstlisting}
+
+\item[-] Print the help message.
+\begin{lstlisting}
+vft --help
+\end{lstlisting}
+
+\end{itemize}
 
 
 \section{File Origin Analysis Tool}
