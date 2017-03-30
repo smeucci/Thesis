@@ -54,12 +54,12 @@ The Video Format Tool is a software application that we have implemented mainly 
 
 The implemented features are:
 \begin{itemize}
-\item[-] Parse: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the \emph{MP4Parser} library \cite{mp4parser} and it saves it in an XML file, using the \emph{JDOM} library \cite{jdom}.
-\item[-] Batch parse: given as input a folder containing video files, it parses all the videos in the folder and sub-folder, saving them into XML files by recreating the same folder structure.
-\item[-] Draw: it is used to draw in a window a tree, given an XML file as input that represents a video file container.
-\item[-] Merge: given two XML input files, it combines them into a single XML file. By taking one as the base for the merge, it adds to it the atoms that only the other XML file has; also, for atoms that are in common, it considers the attributes and, by looking at their values, it adds them to the base XML files, so that for each attributes we will have a vector of values.
-\item[-] Update: it is an advanced method to use the merge. Instead of giving two XML files as input, it takes a folder that contains XML files and merges them into a single XML as explained above. It also considers sub-folders.
-\item[-] Compare: given two XML files, it compares them and it returns a measure of how much they differ.
+\item[-] \emph{Parse}: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the \emph{MP4Parser} library \cite{mp4parser} and it saves it in an XML file, using the \emph{JDOM} library \cite{jdom}.
+\item[-] \emph{Batch parse}: given as input a folder containing video files, it parses all the videos in the folder and sub-folder, saving them into XML files by recreating the same folder structure.
+\item[-] \emph{Draw}: it is used to draw in a window a tree, given an XML file as input that represents a video file container.
+\item[-] \emph{Merge}: given two XML input files, it combines them into a single XML file. By taking one as the base for the merge, it adds to it the atoms that only the other XML file has; also, for atoms that are in common, it considers the attributes and, by looking at their values, it adds them to the base XML files, so that for each attributes we will have a vector of values.
+\item[-] \emph{Update}: it is an advanced method to use the merge. Instead of giving two XML files as input, it takes a folder that contains XML files and merges them into a single XML as explained above. It also considers sub-folders.
+\item[-] \emph{Compare}: given two XML files, it compares them and it returns a measure of how much they differ.
 \end{itemize}
 
 \subsection{Implementation} 
@@ -69,8 +69,6 @@ During the development of the application, we have made several implementation c
 \subsubsection{Parse}
 
 The \emph{parse} feature make use of the \emph{Mp4Parser} library, a Java API to read, write and create MP4-like files.
-
-The Video Format Tool, 
 
 To explain how the \emph{parse} feature is implemented, we will follow the process of extraction of a file container from the input of a video to the creation of the corresponding XML file.
 
@@ -100,7 +98,7 @@ In order to represent the XML files as objects, from each \emph{JDOM Element} ca
 
 The \emph{Tree} interface is implemented in order to maintain the same nested structure of a XML file that represents a file containers. It is used as the \emph{Component} class in the \emph{Composite} pattern to implements trees. Such as a file container or a XML file, a tree can have children, which are other sub-tree, and fields, which are couples of name and value.
 
-Each tag of an XML file can be a \emph{Node} or a \emph{Leaf}, both classes that implements the \emph{Tree} interface. Each \emph{Tree} object has a name for identification, a String variable whose value is taken from the name of the tag, a father, that is another Tree object or a \emph{Null} object for the root Tree object, a list of children Tree objects and a list of Field objects, that correspond to the attributes of XML tag.
+Each tag of an XML file can be a \emph{Node} or a \emph{Leaf}, both classes that implements the \emph{Tree} interface. Each \emph{Tree} object has a name for identification, a String variable whose value is taken from the name of the tag, a father, that is another Tree object or a \emph{Null} object for the root Tree object, a list of children \emph{Tree} objects and a list of \emph{Field} objects, that correspond to the attributes of XML tag.
 
 The \emph{Tree} interface also requires many feature to add, remove, retrieve and modify each \emph{Tree} object along with its children and its list of \emph{Field} objects.
 
@@ -182,91 +180,138 @@ vft --help
 
 \subsection{Functional Requirements}
 
-L'implementazione della teoria è stata realizzata con un'applicazione java da utilizzare da terminale. Le funzionalità principale sono:
-- Training: si occupa prendere i due set considerati e di fare il merge di tutti i file xml. Inoltre calcola il potere discriminante di ciascun attributo relativamente ad entrambi i set.
-- Testing: è la fase che si occupa di rispondere alla domanda. Dato un video in ingresso, calcola la likelihood usando i config file costrutiti dalla fase di training. La likelihood viene modulata usando il logaritmo in base 10 e tale score viene sogliato sullo zero. >0 true, <0 false.
+The File Origin Analysis Tool is the software application implements the theory behind our proposed method regarding Source Identification based on video file containers and it is developed to be used as a command-line program.
 
-In foa sono state poi implementate una serie di operazione su database sqlite che serviranno successivamente per la web application che serve da interfaccia di foa e verranno quindi descritte in seguito.
+The main features are:
+\begin{itemize}
+
+\item[-] Training: given two sets of videos, one representing a class $C$ and the other a class $\overline{C}$, it will creates $\Omega$, saved as a XML files. Then, for each attribute $\omega$ it will compute the discriminant power regarding the class $C$ and the class $\overline{C}$, respectively.
+
+\item[-] Test: given a query video $X$, for each attribute $\omega_{j} \in X$ it will check the corresponding discriminant power estimated by the previous training phase for both the class $C$ and the class $\overline{C}$. By combining all the discriminant powers of all the attributes $\omega_{j}$, it will compute a measure, representing the likelihood that $X$ belongs to the class $C$.
+
+\end{itemize}
 
 \subsection{Implementation}
 
-Sono state fatte alcune scelte implementative per migliorare la capacità del programa di identificare correttamente la classe:
-- quando cerco un atomo per calcolare i rapporti, prendo l'atomo corrispondente nel config di training cercando il nome intero es. *<moov-2>*. Questo vale per tutti gli atomi tranne per *<trak>*. Il codice trak è usato sia per l'atomo delle traccia audio che quello della traccia video. Cercare *<trak-2>* potrebbe restituire si l'atomo con lo stesso nome ma che invece riguarda l'audio e non il video, dovuto al diverso posizionamente nel file container.
-- alcuni attributi che sono noti essere unici per il video e non per la classe a cui appartiene non vengono considerati nella fase di testing. Tali attributi sono ad esempio la dimensione del file video, o la data di creazione e modifica. Potremmo considerarli e poi sogliare la likelihood in accordo dopo aver fatto una statistica di quanto sposta tale modifica per tutte le classi. (come in compare).
-- alcuni atomi non vengono considerati, in particolare xyz e udta. L'atomo xyz è dove sono salvate le informazioni relative alla posizione del dispositivo nel momento dell'acquisizione. Sebbene molto utile per certi scopi, non è utile come discriminante per l'appartenza ad una classe di dispositivi. Infatti basta filmare due video dallo stesso dispositivo una volta col gps accesso e l'altra spento per ottenere due container diversi. Tale diversità è accentuata dal fatto che considerando la posizione degli atomi (numerazione dei figli), l'aggiunta di un tag fa incrementare il valore del numero a tutti gli atomi figli che vengono dopo. Questo significa che i container verrà visto come completamente diverso. Per porsi rimedia basta attivare una flag quando ho trovato ad un certo livello dell'albero creato dal file xml. Quando la flag è attiva, per quel livello del file xml, cerco i tag in base al codice vero senza considerare il numero della posizione. (da rivedere).
-- dato un atomo ho tanti attributi; nella fase di testing per ogni attributo di un atomo calcolo il rapporto e poi ne faccio il prodotto. Ciò rappresenta la likelihood di quell'atomo. Se però i rapporti degli attributi di un atomo sono tutti esattamente uguali, praticamente sto moltiplicando più volte la stessa cosa; è come se stessi contanto più volte la stessa uguaglianza. Per ovviare è ciò la likelihood di ciascuno atomo è modulata in base ad un entropia data da una formula (da mettere). Quando l'entropia è massima, ovvero tutti i rapporti diversi fa il prodotto normale; quando è minima ovvero zero praticamente considera solo un rapport; nei casi medi fa una specie di media per quei gruppetti che hanno i rapporti uguali. Altrimenti alcuni atomi poco discriminanti ma con tanti attributi pesano tantissimo.
-- rapporto: quando vado a calcolare il rapporto fra i pesi di un attributo di un atomo, vado a prendere i pesi nel set A e i pesi nel set B. Si possono verificare fra casi diversi:
- - numeratore e denominatore = 0: faccio rapporto normale.
- - numeratore = 0 e denominatore != 0: siccome non posso avere un rapporto pari a zero altrimenti col prodotto mi manda a zero tutta la likelihood, devo modificare il numeratore. Siccome tale caso in teoria è favorevole alla classe del denominatore (B), mi basta scegliere come numeratore un valore per il quale il rapporto è sempre minore di 1. Quindi scelgo 1 / il numero di video presenti nella classe B + 1. In tal modo è sempre minore di 1, con il rapporto che però varia in base al valore del denominatore.
- - numeratore != 0 e denominatore = 0: il denominatore non può essere zero. Come prima: mi basta che il rapporto sia sempre in favore di numeratore, quindi che sia sempre maggiore di 1. Sceglo il denominatore pari a 1 / il numero di video della classe A + 1. Anche in questo caso l'intensità di tale rapporto varia in base al valore del numeratore.
- - numeratore e denominatore != 0: questo caso si verifica quando il video di query presenta atomi o valori di attributi che non sono presenti nel config di training. Tale case viene considerato a favore della classe B. Infatti tale problema, seppure binario, non è simmetrico: nel dubbio dico che non è della classe A (meglio lasciare libero un colpevole che mettere condannare un innocente). Questo caso viene considerato come un 0/1, in cui il peso per la classe A è zero e quello per la classe B è pari a 1 massimo. Modifichiamo il numeratore con i principi del secondo caso, ma invece di considerare il numero di video della classe del denominatore, lo scegliamo di quello del denominatore. Infatti, seppure deciso in favore di B, tale caso è comunque dubbio quindi moduliamo il rapporto in base al numero di video di A.
- (Spiegare meglio discorso dei rapporti e dei numA ecc)
+\subsubsection{Training}
+
+The task of the training phase it is to compute the discriminant power of each attribute $\omega \in \Omega$. The work-flow of the feature is as follow. The \emph{Train} class is the one that deals with the training phase. Its constructor will take as arguments two \emph{VideoClass} objects, one for the class $C$ and the other for the class $\overline{C}$, that will contains a list of XML files for each ground truth video of the class, and a \emph{String} for the output folder in which the XML file that represents $\Omega$ will be saved.
+Using the \emph{train()} method of the \emph{Train} class, it will first iteratively use the merge feature of the \emph{Video Format Tool} library to compute $\Omega$ and represent it as a XML file, that will be referred to as the configuration file. The resulting XML file will contain all of the atoms found in the file container of the ground truth videos. For each attribute, as explained in the Video Format Tool section, its value will be a list of possible values found for the attribute of that particular atom in every file containers of the ground truth. Also, to each attribute will be associated two vectors of weights, the same size as the number of possible values, initialized to zero. These vectors will be used to compute the discriminant power of each attribute value regarding both class $C$ and class $\overline{C}$.
+
+This computation is done by the \emph{computeWeights()} method of the \emph{Train} class, first for the class $C$ and then for the class $\overline{C}$. It takes two \emph{Tree} object of the \emph{Video Format Tool library}, one representing the configuration XML file and the other a video of class $C$. For each atom of the configuration \emph{Tree} object, it will search for the corresponding atom in the class $C$ \emph{Tree} object. Then, for each attribute of the class $C$ \emph{Tree} object it will check for its value in the list of possible value for that attribute contained in the configuration \emph{Tree} object and will increment the weight that correspond to that value. Each weight $w_{i}$ is normalized by the number of videos of the class under examination, so that $w_{i} \in \left[0, 1\right] $.
+
+Finally, the configuration Tree object will contain the discriminant powers of every attributes values for each atom for the ground truth with regard to the class $C$. The same process will be applied to the videos of the class $\overline{C}$ and then both configuration Tree object will be saved in two separate XML files, one for class $C$ and one for class $\overline{C}$, terminating the training phase.
+
+
+\subsubsection{Test}
+
+In the test phase, given a query video $X$, we want to determine, based on its file container, if $X$ belongs to the class $C$ or not. In order to do so, we need a likelihood measure that takes into account all the discriminant powers of the attributes value of the file container of the video $X$ with regards to class $C$ and class $\overline{C}$.
+
+The constructor of the class \emph{Test} takes as arguments the path of the XML file, that represent the file container of the query video, and the paths for the configuration XML files for both class $C$ and class $\overline{C}$.
+The method \emph{test()} will build all passed XML files to \emph{Tree} objects. Then, it will create a \emph{StandarLikelihood} object, a class that implements the \emph{Likelihood} interface. In this way, we can change and customized how we want the likelihood to be computed.
+
+The implemented \emph{StandardLikelihood} works as follow. Using the \emph{computeLikelihood()} method, it explores all the atoms of the query Tree object. For each of these atom, it will search for the corresponding one in both configuration Tree objects. For each attribute of the atom under examination, it will compute the ratios between the weights from both classes associated with that value, with the weight for the class $C$ as a numerator and the weight for the class $\overline{C}$. All the ratios for each attribute of the query file container will then be multiplied between them, obtaining a likelihood measure $L(X)$, which is then smoothed with the natural logarithm. 
+The final result $l(X) = ln(L(X))$ can be used to determine whether X belongs to the class $C$.
+
+
+\subsubsection{Implementation Details}
+
+The list of possible values associated to an attribute of the configuration files is computed by merging the values for that certain attribute found both in the videos of the class $C$ and the class $\overline{C}$. It is possible that a given value for an attribute is only present in the videos of a class but never in the other. This fact means that the weight, i.e. the discriminant power, associated to that attribute value will be zero for the latter.
+Also, the origin of the query video could be unknown, meaning that its source will differ from all the video of the ground truth. The file container of the query video could have both atoms and attributes values that are not present in the configuration files. When computing the ratio for these new attributes, it follows that they will not have a weight associated.
+
+To deal with these issue, we have identified four different scenarios that can happen when computing the ratios between the values weights.
+
+The default case is the easiest one and it occurs when both the weight associated to class $C$ and the weight associated to class $\overline{C}$ are greater that zero.
+
+When the weight associated to the attribute value for the class $\overline{C}$ equals to zero, then the ratio between the weights will have the form of $ \dfrac{w_{i}}{0} $, with $w_{i}$ the weight associated to the attribute value for the class $C$. A division by zero is not acceptable. To overcome this issue, we modified the computation to $$ \dfrac{w_{i}}{\dfrac{1}{N_{C} + 1}} $$, where $N_{C}$ is the number of videos in the class $C$. In this way, the denominator will have the smallest possible value and the ratio will still pull the likelihood towards the class $C$.
+
+Instead, when the weight associated to the attribute value for the class $C$ equals to zero, the ratio will have the form of $ \dfrac{0}{w_{j}} $, with $w_{j}$ the weight associated to the attribute value for the class $\overline{C}$. In this case, since the numerator is zero, the ratio will equal to zero too. This is an unwanted scenario because, since all the ratios are multiplied between them, a single ratio that equals to zero is enough to make the general likelihood zero too. We decided to solve this problem by modifying the computation of the ratio for this case to $$ \dfrac{\dfrac{1}{N_{\overline{C}} + 1}}{w_{j}} $$, where $N_{\overline{C}}$ is the number of videos in the class $\overline{C}$.
+
+Finally, when an atom or an attribute value is not present in the configuration files, we have the case where both weights equal to zero. Since we want to determine if a given query video $X$ belongs to the class $C$, any information on the file container that is not present in the configuration files for the class $C$ will be treated as if it means that the video does not belong to the class $C$, even if the same information is also not present in the configuration file for the class $\overline{C}$.
+
+When multiplying the ratios for a certain atom, the resulting value can be seen as a likelihood of observing that specific atom with its attributes values in either of the two classes. However, the values of the attributes for an atom are not, in general, independently distributed. This means that the values of some attribute can change in groups. If we simply multiplied all the ratios, it will be as if we are counting the same information multiple time, pushing the likelihood towards the class $C$ or the class $\overline{C}$ improperly.
+
+To solve the issue, we multiply the likelihood ratios of each atom by also taking into consideration the decorrelation factor.
+Given a vector of likelihood ratios $(x_{1},\ldots,x_{n})$ we compute the likelihood $$ L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i}^{\alpha_{i}} $$ with $$ \alpha_{i} = \dfrac{(n-1)\gamma_{i}+1}{n} $$ $$ \gamma_{i} = - \dfrac{n}{log n} P(x_{i})log P(x_{i}) $$ and where $P(x_{i})$ represent the probability of finding that value of ratio in the vector.
+We have three cases:
+
+\begin{itemize}
+
+\item[1)] $P(x_{i}) = \dfrac{1}{n} $ with $x_{i} \neq x_{j}$, $ \forall i \neq j $.
+Then we will have $$ \gamma_{i} = - \dfrac{n}{log n} \dfrac{1}{n} log\dfrac{1}{n} $$ resulting in $\alpha_{i} = 1$.
+The likelihood will be computed as $$L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i} $$
+
+\item[2)] $P(x_{i}) = 1 $ with $x_{i} = x_{j}$, $ \forall i,j $.
+Then we will have $ \gamma_{i} = 0 $ and $\alpha_{i} = \dfrac{1}{n} $.
+The likelihood will be computed as $$L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i}^{\dfrac{1}{n}} = x_{1}^{\sum \dfrac{1}{n}} = x_{1} $$
+
+\item[3)]  $x_{i} = x_{j}$, $ i,j = 1,\ldots,k $ with $P(x_{i}) = \dfrac{k}{n} $ for $i = 1,\ldots,k$ and $P(x_{j}) = \dfrac{1}{n}$ for $j > k$.
+Then we will have $$ \gamma_{i} = -n \dfrac{n}{log n} \dfrac{k}{n} log \dfrac{k}{n} = k (log \dfrac{k}{n})log n $$ and 
+$$ \alpha_{i} = \dfrac{(n-1)(k log \dfrac{k}{n})log n + 1}{n} $$
+The likelihood will be computed as $$L(\overline{x}) = x_{i}^{\sum \dfrac{1}{n}} = x_{1}^{\left[ (n-1)(k log \dfrac{k}{n})log n + 1 \right] \dfrac{k}{n}} \cdot \prod\limits_{j=k+1}^{n} x_{j}  $$
+
+\end{itemize}
 
 \subsection{Command Line Tool}
 
-`usage: foa [-cA <xml file>] [-cB <xml file>] [-h | -init | -trn | -tst |
-       -ute | -utr] [-i <xml/txt file or folder>]  [-lA <txt/json file>]
-       [-lB <txt/json file>] [-o <folder>]     [-v]
- -cA,--configA <xml file>              xml config file for class A, only
-                                       for --test
- -cB,--configB <xml file>              xml config file for class B, only
-                                       for --test
- -h,--help                             print help message
- -i,--input <xml/txt file or folder>   xml file or txt file with list of
-                                       xml paths for which compute the
-                                       likelihood for class A and B, only
-                                       for --test, dataset folder path for
-                                       --update
- -init,--initialize                    initialize database
- -lA,--listA <txt/json file>           text/json file containing a list of
-                                       xml file for class A, only for
-                                       --train
- -lB,--listB <txt/json file>           text/json file containing a list of
-                                       xml file for class B, only for
-                                       --train
- -o,--output <folder>                  output folder for the training
-                                       config files, only for --train
- -trn,--train                          train a binary classification
-                                       problem
- -tst,--test                           predict the class of a xml file
- -ute,--update-testing                 update testing database
- -utr,--update-training                update trainingdatabase
- -v,--verbose                          whether or not display information,
-                                       only for --test
-`
+
+In the following section, we will explain how to use the command-line interface for the File Origin Analysis Tool by giving some examples of usage.
+
+\begin{itemize}
+
+\item[-] Compute the configuration files for given classes $C$ and $\overline{C}$.
+\begin{lstlisting}
+foa --train --listA classC.json --listB classNotC.json -o /output_folder
+\end{lstlisting}
+
+\item[-] Given two classes $C$ and $\overline{C}$, test if a video $X$ belongs to class $C$.
+\begin{lstlisting}
+foa --test -i input.xml --configA configC.xml --configB configNotC.xml
+\end{lstlisting}
+
+\item[-] Print the help message.
+\begin{lstlisting}
+vft --help
+\end{lstlisting}
+
+\end{itemize}
 
 \section{Web Application}
 
-Per utilizzare più semplicemente gli strumenti di analisi forense implementati e spiegati precedentemente, è stato deciso di implementare una web application che funga da interfaccia e permettere ad un utente di customizzare le query e ottere un output dei risultati.
-La web app è sviluppata come node.js app ed utilizza un server express. Segue quindi la struttura: html + css per aspetto, js client-side per interattività e ajax call, js server-side per rispondere alle chiamate ajax e eseguire le features e poi rispondere al client (node+epress).
+To facilitate the application of the proposed approach for forensic analysis using the tool previously explained, we have also implemented a web application. Its task is to act as a graphical user interface and allow a user to customize the query and present the results in a more readable format. The web application was developed using the \emph{Javascript} runtime \emph{Node.js} \cite{node} and with the framework \emph{Express.js} \cite{express} for the server's back-end. It uses a \emph{SQLite} database to store information about the ground truth videos and the classes of devices that are available.
 
-Le features principali sono classify, per identificare la classe del dispositivo sorgente dato un video, compare, per integrity analysis, infine test per rendere più veloci i test con query.
-
-Il dataset utilizzato è diviso in training e testing. Ciascun video possiede un file xml di informazioni utilizzato per costruire il groundtruth. Tali informazioni, insieme ai path del video, dell'info.xml e del file xml del container, sono salvati in un database. Tale database viene interrogato per ottenere i video per il training e per ottenere i video da testare.
+The web application implements functionalities for the Source Identification and the Integrity Verification using the feature of the \emph{Video Format Tool} and of the \emph{File Origin Analysis Tool}, which are called \emph{Classify} and \emph{Compare} respectively.
+It also has a test functionality that helps to speed up the experiments that will be explained in a later section of this thesis.
 
 \subsection{Features}
 
-É possibile seleziona la features dal nav in cima alla pagina, con in aggiunta una pagina dove spiega come usare tali features.
+It is possible to select the feature that we want to use from the navigation bar at the top of the page. In the following, it will be described how each feature work.
 
-- Classify:
-questa features funziona in due modalità per il training, ovvero manuale e automatica. La modalità manuale si ha quando l'utente è a conoscenza del dispositivo sorgente del video query ma non ha il dispositivo ed intende verificare tale classe. La modalità automatica invece viene utilizzata quando l'utente è totalmente all'oscuro del dispositivo sorgente del video query. Le due modalità funzionano così:
+\begin{itemize}
 
- - manual:
-  nel box class l'utente seleziona il brand, il model, e il sistema operativo. Questi elementi sono in sequenza; l'utente può scegliere solo il brand oppure il brand e il model oppure tutti e tre. In base a tale scelta cambierà come la classe avversaria (B) verrà selezionata, ed anche quella scelta (A).
-  Per scegliere la classe A viene fatta un query al database sulla tabella dei video di training in base alla scelta della classe. Se scelgo solo il brand prendo tutti i video di quel brand; se scelgo brand e model prendo tutti i video di quel brand e specifico modello; infine se scelgo brand model e os prendo tutti i video di quel brand e modello con quel sistema operativo specificato.
-  La classe B viene presa sulla base della scelta per la classe A. Se è stato scelto solo il brand prendo tutti i video i cui dispositivi non appartengono a quel brand; se è stato scelto solo brand e model, prendo tutti i video provenienti dai dispositivi di quel brand ma degli altri modelli disponibili per quel brand; infine se è stato scelto brand model e os, prendo tutti i video provenienti dai dispositivi di quel brand e modell ma degli altri sistemi operativi disponibili.
-  Nel caso di brand model e os, se non sono disponibili altri sistemi operativi mi riporto al caso 2, ovvero brand e model. Nel caso di brand model, se non sono disponibili altri modelli per quel brand, mi riporto al caso 1, ovvero brand.
+\item[-] \emph{Classify}: this feature is use for Source Classification purposes. As shown in fig(1), the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
 
- - automatic:
-  nel box class l'utente non seleziona nulla, lascia tutto any. A questo punto verranno testate tutte le classi disponibili nel database. Verrà viene seleziona ogni possibile classe A e di conseguenza ogni possibile classe B.
+It can work in two different ways: if the user specifically select a class (a brand, a brand and a model, or a brand a model and an operating system), the method will execute in manual mode; if the user leaves the default values \emph{Any} from each selection, the method will execute in automatic mode.
 
- Nel box upload, viene seleziona il video query che di cui si vuole predire la sorgente. È possibile caricare un video (mp4 o mov) o più video (max 5?), oppure direttamente i file xml dei rispettivi container. Nel caso in cui si caricano i file video, verrà fatto il parse del video prima di procedere.
+The manual mode is generally used when the user already have an assumption about the query video source device and wants to assess its correctness. Choosing a specific class is equal to asking a binary question: does the query video belongs to this selected class? The application will proceeds to split the ground truth accordingly and will compute and return the likelihood for the query video regarding the selected device class.
 
- I file di training sono creati ed aggiornati periodicamente indipendentemente dalla query. Infatti tali file dipendono dai video presenti nel dataset; la scelta della classe da parte dell'utente serve solo a decide quali file di training utilizzare. Quindi è possibile ottimizzare creandoli prima e andando a selezionare quelli che mi servono di caso in caso.
+The automatic mode is typically used when no assumption is made about the query video origin. Instead one binary problem, we pose as many binary problem as there are classes of devices in our ground truth dataset of videos. For each class, the likelihood will be computed and then sorted with regards to all other. The outputted result, as shown in fig(2), will be a list of classes sorted by likelihood in decreasing order.
 
- Una volta che ho caricato il video, scelto la classe A e B, il server utilizza i corretti file di training. Dopo c'è la fase di testing (utilizza foa), che, dati i video caricati, calcola la likelihood rispetto alla classe selezionata. Per il caso automatic verrà calcolata la likelihood per tutte le classi; tali likelihood vengono ordinate dal migliore al peggiore.
+The \emph{Classify} feature also allow the user to upload and compute the likelihood for more than one query video at a time.
 
- Infine, finito tutto, nel box output viene mostrato il nome del video query e la classe testata insieme alla likelihood associata; per il caso automatic vengono mostrati, per ciascun video caricato, i migliori 5 risutalti (classe + likelihood).
+Particular attention must be reserved in how the ground truth is split once a class $C$ to test is chosen. In fact, we have found that the results can be greatly affected by the reference population, in our case the complementary class $\overline{C}$. This problem affects also other application of forensic analysis, mainly in Speaker Recognition. Thus, it is important to decide if the reference population must represents a sample of the entire population or a sample of the population that presents similar characteristics to the population of the class under examination. For our case, this question translates to choosing if the class $\overline{C}$ should contain a sample of all the videos in the ground truth that do not belong to the class $C$, or a sample of all videos in the ground truth that do not belong to the class $C$ but that are similar to the videos in class $C$.
+
+We decide for the latter approach.
+If a class is compose of brand, model, and operating system the complementary class $\overline{C}$ is chosen by taking the videos of the ground truth that have the same brand and model but different operating system.
+If a class is compose of brand and model, leaving the default value Any to the operating system field, the complementary class $\overline{C}$ is chosen by taking the videos of the ground truth from the same brand but that have a different model.
+Finally, if for a class is specified only the brand field, the complementary class $\overline{C}$ is composed by a sample of all the videos from the ground truth that are from a different brand. This is, of course, the most general case and equivalent to choosing a sample of the entire population as the reference.
+
+\item[-] \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two video, one representing the reference and the other the query for which the integrity must be assess. Once the computation is concluded, in the Output box will be shown the results about the comparison.
+
+
+\end{itemize}
+
+
 
 - Test:
  serve per fare il classify più velocemente, senza dover caricare ogni volta i video. C'è solo il box class dove selezionare la classe da testare (manual o auto)e il box output. I video da testare vengono presi dal database dalla tabella dei video di testing, dove sono già parsati in file xml. Oltre all'output come prima, viene mostrata una statistica sui risultati della classificazione per tutti i video considerati (true positivi ecc, correct classification rate); infatti in questo caso è nota la classe vera dei video testati, classe (label) che viene mostrata accanto al nome del file video testato.
