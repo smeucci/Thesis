@@ -132,7 +132,7 @@ Besides the number of differences, it is also counted the total number of attrib
 
 The results are then returned as JSON formatted output.
 
-\subsection{Command Line Tool}
+\subsection{Command Line Examples}
 
 In the following section, we will explain how to use the command-line interface for the Video Format Tool by giving some examples of usage.
 
@@ -252,7 +252,7 @@ The likelihood will be computed as $$L(\overline{x}) = x_{i}^{\sum \dfrac{1}{n}}
 
 \end{itemize}
 
-\subsection{Command Line Tool}
+\subsection{Command Line Examples}
 
 
 In the following section, we will explain how to use the command-line interface for the File Origin Analysis Tool by giving some examples of usage.
@@ -289,13 +289,25 @@ It is possible to select the feature that we want to use from the navigation bar
 
 \begin{itemize}
 
-\item[-] \emph{Classify}: this feature is use for Source Classification purposes. As shown in fig(1), the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
+\item[-] \emph{Classify}: this feature is use for Source Classification purposes. As shown in \ref{fig:classify}, the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{classify}
+  \caption{The user can select the class to test for the \emph{Classify} feature.}\label{fig:classify}
+\end{figure}
 
 It can work in two different ways: if the user specifically select a class (a brand, a brand and a model, or a brand a model and an operating system), the method will execute in manual mode; if the user leaves the default values \emph{Any} from each selection, the method will execute in automatic mode.
 
 The manual mode is generally used when the user already have an assumption about the query video source device and wants to assess its correctness. Choosing a specific class is equal to asking a binary question: does the query video belongs to this selected class? The application will proceeds to split the ground truth accordingly and will compute and return the likelihood for the query video regarding the selected device class.
 
-The automatic mode is typically used when no assumption is made about the query video origin. Instead one binary problem, we pose as many binary problem as there are classes of devices in our ground truth dataset of videos. For each class, the likelihood will be computed and then sorted with regards to all other. The outputted result, as shown in fig(2), will be a list of classes sorted by likelihood in decreasing order.
+The automatic mode is typically used when no assumption is made about the query video origin. Instead one binary problem, we pose as many binary problem as there are classes of devices in our ground truth dataset of videos. For each class, the likelihood will be computed and then sorted with regards to all other. The outputted result, as shown in \ref{fig:classify-output}, will be a list of classes sorted by likelihood in decreasing order.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{classify-output}
+  \caption{For the automatic mode of \emph{Classify}, the results will be shown as a list of class sorted in decreasing order of likelihood}\label{fig:classify-output}
+\end{figure}
 
 The \emph{Classify} feature also allow the user to upload and compute the likelihood for more than one query video at a time.
 
@@ -306,21 +318,16 @@ If a class is compose of brand, model, and operating system the complementary cl
 If a class is compose of brand and model, leaving the default value Any to the operating system field, the complementary class $\overline{C}$ is chosen by taking the videos of the ground truth from the same brand but that have a different model.
 Finally, if for a class is specified only the brand field, the complementary class $\overline{C}$ is composed by a sample of all the videos from the ground truth that are from a different brand. This is, of course, the most general case and equivalent to choosing a sample of the entire population as the reference.
 
-\item[-] \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two video, one representing the reference and the other the query for which the integrity must be assess. Once the computation is concluded, in the Output box will be shown the results about the comparison.
+\item[-] \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two videos, one representing the reference and the other the query for which the integrity must be assess. Once the operation is concluded, in the Output box will be shown the results about the comparison by displaying the number of difference that the query videos have with regards to the reference video and vice-versa; it also possible to show the atoms and the attributes for which the differences are found, as shown in \ref{fig:compare}.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{compare}
+  \caption{For the \emph{Compare}, it is also shown the atoms and the attributes for which the differences are found.}\label{fig:compare}
+\end{figure}
+
+\item[-] \emph{Test}: the \emph{Test} functionality is just an utility to iterate the \emph{Classify} over a number of videos without the need to manually upload each video. In fact, the query videos are store in a table of the web application database along with information about their true class. The output results will be the same as for the \emph{Classify} but with the addition of statistics about the accuracy of the classification.
 
 \end{itemize}
 
-
-
-- Test:
- serve per fare il classify più velocemente, senza dover caricare ogni volta i video. C'è solo il box class dove selezionare la classe da testare (manual o auto)e il box output. I video da testare vengono presi dal database dalla tabella dei video di testing, dove sono già parsati in file xml. Oltre all'output come prima, viene mostrata una statistica sui risultati della classificazione per tutti i video considerati (true positivi ecc, correct classification rate); infatti in questo caso è nota la classe vera dei video testati, classe (label) che viene mostrata accanto al nome del file video testato.
-
-- Compare:
- il compare sfrutta la feature compare di vft. É possibile caricare due video, uno reference l'altro query dal box upload. Una volta finito, nel box output verranno mostrati i risultati, ovvero il numero totale di attributi di reference e le differenze rispetto a query; inoltre lo stesso calcolo è fatto invertendo ref e query, per dare una visione migliore delle differenze ed eventuali somiglianze/uguaglianze.
-
-- vft-parse:
- se l'utente non è in possesso dei file container, può caricare un video; se però il file video è grande e non si può/vuole aspettare il caricamento sul server, dal box upload può essere scaricato un programmino jar chiamato vft-parse. Tale programma, con una semplice interfaccia in java swing, è una costola di vft completo e permetto di fare il parsing di un video selezionato o di un intera directory. In questo modo è possibile poi caricare i file xml invece dei file video, velocizzando notevolmente il processo per tutte le features.
-
-- problema del parlante:
- il motivo per cui vengono scelte le classi avversarie nel modo spiegato precedentemente è che si va incontro al problema del parlante. Il problema del parlante consiste nel fatto che ad esempio nel riconoscimento del parlato, se uso un dataset molto vario in cui includo tutte le lingue e dialetti del modo per fare il training, poi non sono in grado di classificare accuratamente un parlato query; mentre se invece per fare il training seleziono dialetti simili allora sono in grado di classificare correttamente. Ciò sembra contro-intuitivo per la realtà, dove accade il contrare, ma in questi contesti usare cose simili significa dare molto più peso a piccole differenze che nel caso globale andrebbero perse. Questa è l'idea usata alla base della scelta delle classi avversarie, che cercano di essere diverse ma simili alla classe selezionata dall'utente.
+For both the \emph{Classify} and \emph{Compare} functionality, it is possible to upload a query video directly as a video file. However, since this is a web application, there could be limitation in the upload speed of an user making the process of using this tool slow. As mention previously it possible to upload the XML file representing a video file container as query but, in general, a user might not possess the instrument to acquire such XML file. For this reason, we have also develop a small Java \emph{Swing} GUI application that can be downloaded from the web application. This app allows the user to parse a video file into a XML file representing its file container, using the parse feature from the \emph{Video Format Tool}, as well as parsing an entire folder. In this way, due to the small size of a generic XML file, it is possible to execute a query seamlessly.
