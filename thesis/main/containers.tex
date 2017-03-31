@@ -1,1 +1,68 @@
 \chapter{Video File Containers}
+
+
+# struttura
+
+The ISO Base Media File Format is designed to contain timed media information for a presentation in a
+flexible, extensible format that facilitates interchange, management, editing, and presentation of the media.
+This presentation may be ‘local’ to the system containing the presentation, or may be via a network or other
+stream delivery mechanism.
+The file structure is object-oriented; a file can be decomposed into constituent objects very simply, and the
+structure of the objects inferred directly from their type.
+The file format is designed to be independent of any particular network protocol while enabling efficient
+support for them in general.
+The ISO Base Media File Format is a base format for media file formats.
+
+This International Standard specifies the ISO base media file format, which is a general format forming the
+basis for a number of other more specific file formats. This format contains the timing, structure, and media
+information for timed sequences of media data, such as audio/visual presentations.
+
+Box:
+An object-oriented building block defined by a unique type identifier and length (called ‘atom’ in some
+specifications, including the first definition of MP4).
+
+Presentation:
+One or more motion sequences (q.v.), possibly combined with audio.
+
+File Structure
+Files are formed as a series of objects, called boxes in this specification. All data is contained in boxes; there
+is no other data within the file. This includes any initial signature required by the specific file format.
+All object-structured files conformant to this section of this specification (all Object-Structured files) shall
+contain a File Type Box.
+
+
+Object Structure
+An object in this terminology is a box.
+Boxes start with a header which gives both size and type. The header permits compact or extended size (32
+or 64 bits) and compact or extended types (32 bits or full UUIDs). The standard boxes all use compact types
+(32-bit) and most boxes will use the compact (32-bit) size. Typically only the Media Data Box(es) need the 64-
+bit size.
+The size is the entire size of the box, including the size and type header, fields, and all contained boxes. This
+facilitates general parsing of the file.
+The definitions of boxes are given in the syntax description language (SDL) defined in MPEG-4 (see reference
+in clause 2). Comments in the code fragments in this specification indicate informative material.
+The fields in the objects are stored with the most significant byte first, commonly known as network byte order
+or big-endian format.
+
+The semantics of these two fields are:
+size is an integer that specifies the number of bytes in this box, including all its fields and contained
+boxes; if size is 1 then the actual size is in the field largesize; if size is 0, then this box is the last
+one in the file, and its contents extend to the end of the file (normally only used for a Media Data Box)
+
+type identifies the box type; standard boxes use a compact type, which is normally four printable
+characters, to permit ease of identification, and is shown so in the boxes below. User extensions use
+an extended type; in this case, the type field is set to ‘uuid’.
+Boxes with an unrecognized type shall be ignored and skipped.
+Many objects also contain a version number and flags field:
+
+The semantics of these two fields are:
+version is an integer that specifies the version of this format of the box.
+flags is a map of flags
+Boxes with an unrecognized version shall be ignored and skipped.
+
+Object Structure
+The file is structured as a sequence of objects; some of these objects may contain other objects. The
+sequence of objects in the file shall contain exactly one presentation metadata wrapper (the Movie Box). It is
+usually close to the beginning or end of the file, to permit its easy location. The other objects found at this level
+may be a File-Type box, Free Space Boxes, Movie Fragments, Meta-data, or Media Data Boxes.
+
