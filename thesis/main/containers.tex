@@ -1,68 +1,216 @@
-\chapter{Video File Containers}
+\chapter{Video File Formats}
 
 
-struttura
+The ISO Base Media File Format is a container for multimedia formats which can contain both audio and video data. It is a general format for media file formats that represents a basis for a number of other file formats.
+As described in the standard ISO/IEC 14496 Part 12 \cite{iso}, it is designed to contain media information for a video in a flexible and extensible format so that the interchange, management, editing, and presentation of a media are facilitated. The information that this formats represents included timing, structure, and media information for a presentation, i.e. one or more motion sequences that can also be combined with audio.
 
-The ISO Base Media File Format is designed to contain timed media information for a presentation in a
-flexible, extensible format that facilitates interchange, management, editing, and presentation of the media.
-This presentation may be ‘local’ to the system containing the presentation, or may be via a network or other
-stream delivery mechanism.
-The file structure is object-oriented; a file can be decomposed into constituent objects very simply, and the
-structure of the objects inferred directly from their type.
-The file format is designed to be independent of any particular network protocol while enabling efficient
-support for them in general.
-The ISO Base Media File Format is a base format for media file formats.
+The ISO Base Media File Format has a object-oriented type structure. In fact, files conform to this standard are formed as a sequence of objects, called boxes or sometimes atoms, that contain all the data about the media. Some of these boxes can also contain other boxes. A box consist of a header, followed by the box data. The header contain a unique type identifier, representing the type of the box, and the size of the box. Some boxed may also contain information fields about version number and flags. For these four fields, the semantic is the following:
 
-This International Standard specifies the ISO base media file format, which is a general format forming the
-basis for a number of other more specific file formats. This format contains the timing, structure, and media
-information for timed sequences of media data, such as audio/visual presentations.
+\begin{itemize}
+\item \emph{size}: an integer that specifies the number of bytes used by a box, including the fields and all contained boxes.
+\item \emph{type}: a four printable characters that identifies the box type.
+\item \emph{version}: an integer that specifies the version of the format of the box.
+\item \emph{flags}: a set of flags.
+\end{itemize}
 
-Box:
-An object-oriented building block defined by a unique type identifier and length (called ‘atom’ in some
-specifications, including the first definition of MP4).
+The sequences of boxes in a file must contain one representation metadata wrapper, i.e. the Movie Box (\emph{moov}). The other boxes that can be found at the first level are File Type Box (\emph{ftyp}), Free Space Boxes (\emph{free}), Movie Fragments (\emph{moof}), Meta-data (\emph{meta}), or Media Data Boxes (\emph{mdat}).
 
-Presentation:
-One or more motion sequences (q.v.), possibly combined with audio.
+The MP4 File Format, described in the standard ISO/IEC 14496-14 Part 14 \cite{mp4}, and MOV File Format, described in the QuickTime File Format specification \cite{mov}, are derived from the ISO Base Media File Format. In fact, the general structure of the ISO file is fully implemented by both file formats. Each file format introduces new boxes and redefines the values of some fields that are already present in the ISO standard.
 
-File Structure
-Files are formed as a series of objects, called boxes in this specification. All data is contained in boxes; there
-is no other data within the file. This includes any initial signature required by the specific file format.
-All object-structured files conformant to this section of this specification (all Object-Structured files) shall
-contain a File Type Box.
+In the following, we will given additional information about the structure and the content of the boxes contained in an ISO file.
+
+\section{Box Definitions}
+
+An overall view of an example of a object-oriented structured file of this format can be view in \ref{boxtable}. For the complete encapsulation structure, \cite{iso} can be consulted.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|l}
+\hline
+  ftyp &      &      &      &      &      & * & file type and compatibility\\ \hline
+  moov &      &      &      &      &      & * & container for all the metadata \\ \hline
+       & mvhd &      &      &      &      & * & movie header \\ \hline
+       & trak &      &      &      &      & * & container for an individual trak \\ \hline
+       &      & tkhd &      &      &      & * & track header\\ \hline
+       &      & mdia &      &      &      & * & container for the media information \\ \hline
+       &      &      & mdhd &      &      & * & media header \\ \hline
+       &      &      & hdlr &      &      & * & handler \\ \hline
+       &      &      & minf &      &      & * & media information container \\ \hline
+       &      &      &      & vmhd &      &   & video media header \\ \hline
+       &      &      &      & smhd &      &   & sound media header \\ \hline
+       &      &      &      & hmhd &      &   & hint media header \\ \hline
+       &      &      &      & dinf &      & * & data information box \\ \hline
+       &      &      &      &      & dref & * & data reference box \\ \hline
+       &      &      &      & stbl &      & * & sample table box \\ \hline
+       &      &      &      &      & stsd & * & sample descriptions \\ \hline
+       &      &      &      &      & stts & * & time-to-sample \\ \hline
+       &      &      &      &      & stcs & * & sample-to-chunck \\ \hline
+       &      &      &      &      & stcz &   & sample sizes (framing) \\ \hline
+       &      &      &      &      & stco & * & chuck offset \\ \hline
+       &      &      &      &      & co64 &   & 64-bit chunk offset \\ \hline
+       &      &      &      &      & stss &   & sync sample table \\ \hline
+       &      &      &      &      & sdtp &   & independent and disposable samples \\ \hline
+       &      & udta &      &      &      &   & user-data \\ \hline
+       & udta &      &      &      &      &   & user-data \\ \hline
+  moof &      &      &      &      &      &   & movie fragment \\ \hline
+  mdat &      &      &      &      &      &   & media data container \\ \hline
+  free &      &      &      &      &      &   & free space \\ \hline
+  meta &      &      &      &      &      &   & metadata \\ \hline
+\end{tabular}
+\caption{Box types and structure.}\label{boxtable}
+\end{table}
+
+The table shows the boxes that shall occur at the top-level of the file in the left-most column with indentations representing containments. The boxes that are marked with an asterisk (*) are mandatory. In following, each box of the table will be described.
+
+\subsection*{File Type Box}
+
+Since a media file structured accordingly to this file format standard can be compatible with more than one specification, it is not possible to speak of a single type or brand for a file.
+The File Type Box (\emph{ftyp}) is a mandatory and unique box that identifies which type represents the best use for a file, along with other compatible specifications. Each brand is described by a four characters code.
+
+The box \emph{ftyp} should be positioned at the top-level of a file before every other box of variable lenghts, such as Movie Box, Free Box, or Media Data Box. Only a box with a fixed-size, such as file signature, may placed before it. The box \emph{ftyp} has three fields:
+
+\begin{itemize}
+\item \emph{major\_brand}: identifies the best use specification.
+\item \emph{minor\_version}: identifies the version of the major specification.
+\item \emph{compatible\_brands}: a list of other compatible specifications.
+\end{itemize}
+
+\subsection*{Movie Box}
+
+The Movie Box (\emph{moov}) is a mandatory and unique box that contains the necessary metadata for a presentation and is placed at the top-level of a file. Although it is not explicitly required, it is normally located close to the beginning or end of a file. It is also a container for other boxes.
+
+\subsection*{Movie Fragment Box}
+
+The Movie Fragment Box (\emph{moof}) is an optional box that extends the media in time, providing additional information that would previously have been present in the Movie Box. It is placed at the top-level of a file and contains a Movie Fragment Header Box (\emph{mfhd}) and one or more Track Fragment Boxes (\emph{traf}). The Movie Fragment Boxes must be placed in the file accordingly to their sequence number.
+
+\subsection*{Media Data Box}
+
+The Media Data Box (\emph{mdat}) contains the media data. Since a presentation can contain zero or more Media Data boxes, it is a optional box. It has a field the specifies the size of the contained media data.
+
+\subsection*{Free Space Box}
+
+The Free Space Box (\emph{free}) is an optional box that can be placed at the top-level of a file or can be contained in other boxes. Usually, the content of this box can be ignored and therefore deleted, without affecting the presentation.
+
+\subsection*{Meta Box}
+
+The Meta Box (\emph{meta}) is an optional box that contains annotative metadata. This box may be located at the top-level of the file, or inside the Movie Box (\emph{moov}) or the Track Box (\emph{trak}). If present, it is required to contain a Handler Reference Box (\emph{hdlr}) that indicates the format of the content of the Meta Box.
+
+\subsection*{Movie Header Box}
+
+The Movie Header Box (\emph{mvhd}) is a mandatory and unique box that is located inside the Movie Box. It is used to specify characteristics of an entire video. The fields contained in the box \emph{mvhd} are the following:
+
+\begin{itemize}
+\item \emph{version}: an integer that specifies the number of bytes for this Movie Header Box.
+\item \emph{creation\_time}: an integer that represents the creation time of a video.
+\item \emph{modification\_time}: an integer that represents the most recent time the video was modified.
+\item \emph{timescale}: an integer that specifies the time-scale for the entire media. It indicated how many units pass in one second.
+\item \emph{duration}: an integer representing the length, in terms of time, of the video.
+\item \emph{rate}: it indicates the preferred rate to play the video.
+\item \emph{volume}: it indicates the preferred audio volume to play the video.
+\item \emph{matrix}: it represents a transformation matrix for the video.
+\item \emph{next\_track\_ID}: a non-zero integer that specifies an ID value to use for the next track to be added to the video.
+\end{itemize}
+
+It is advised that the Movie Header Box should be placed first in its container.
+
+\subsection*{Track Box}
+
+The Trak Box (\emph{trak})s is a mandatory box for a file that is located inside the Movie Box. A video contained one or more tracks with each track independent from the other tracks. Tracks can either be media tracks, containing media data, or hint tracks, containing information for streaming protocol. Every presentation must have at least one media track within an ISO file.
+
+\subsection*{Track Header Box}
+
+The Track Header Box (\emph{tkhd}) is a mandatory and unique box that specifies the characteristics of a track. It is contained inside the Track Box. It contains the following fields:
+
+\begin{itemize}
+\item \emph{version}: an integer that specifies the version of the box. Can either be 0 or 1.
+\item \emph{flags}: an 24-bit integer whose values indicates a track that is enable (\emph{Track\_enabled}), a track that must be used for in the video (\emph{Track\_in\_movie}), or a track that must be used in the preview of the video.
+\item \emph{creation\_time}: an integer that indicates the creation time of a video.
+\item \emph{modification\_time}: an integer that represents the most recent time the video was modified.
+\item \emph{track\_ID}: an integer number that uniquely identifies a track.
+\item \emph{duration}: an integer that indicates the length, in terms of time, of the video.
+\item \emph{layer}: it specifies the order \emph{front-to-back} of the video tracks.
+\item \emph{alternate\_group}: an integer that specifies a group of tracks. It can either be 0, meaning that no relations between tracks are present, or 1, meaning that there are relations between tracks of different groups.
+\item \emph{volume}: it specifies the relative audio volume of the track.
+\item \emph{matrix}: it represents a transformation matrix for the video.
+\item \emph{width} and \emph{height}: they specify the resolution of the video track.
+\end{itemize}
+
+It is advised that the Header Header Box should be placed first in its container.
 
 
-Object Structure
-An object in this terminology is a box.
-Boxes start with a header which gives both size and type. The header permits compact or extended size (32
-or 64 bits) and compact or extended types (32 bits or full UUIDs). The standard boxes all use compact types
-(32-bit) and most boxes will use the compact (32-bit) size. Typically only the Media Data Box(es) need the 64-
-bit size.
-The size is the entire size of the box, including the size and type header, fields, and all contained boxes. This
-facilitates general parsing of the file.
-The definitions of boxes are given in the syntax description language (SDL) defined in MPEG-4 (see reference
-in clause 2). Comments in the code fragments in this specification indicate informative material.
-The fields in the objects are stored with the most significant byte first, commonly known as network byte order
-or big-endian format.
+\subsection*{Media Box}
 
-The semantics of these two fields are:
-size is an integer that specifies the number of bytes in this box, including all its fields and contained
-boxes; if size is 1 then the actual size is in the field largesize; if size is 0, then this box is the last
-one in the file, and its contents extend to the end of the file (normally only used for a Media Data Box)
+The Media Box (\emph{mdia}) is mandatory and unique box within the file and it is contained inside the Track Box. It contains all the objects that specify information about the media data in a track.
 
-type identifies the box type; standard boxes use a compact type, which is normally four printable
-characters, to permit ease of identification, and is shown so in the boxes below. User extensions use
-an extended type; in this case, the type field is set to ‘uuid’.
-Boxes with an unrecognized type shall be ignored and skipped.
-Many objects also contain a version number and flags field:
+\subsection*{Media Header Box}
 
-The semantics of these two fields are:
-version is an integer that specifies the version of this format of the box.
-flags is a map of flags
-Boxes with an unrecognized version shall be ignored and skipped.
+The Media Header Box (\emph{mdhd}) is a mandatory and unique box contained inside a Media Box. It declares all the information relevant to the media in a track. The box \emph{mdhd} contains the following fields:
 
-Object Structure
-The file is structured as a sequence of objects; some of these objects may contain other objects. The
-sequence of objects in the file shall contain exactly one presentation metadata wrapper (the Movie Box). It is
-usually close to the beginning or end of the file, to permit its easy location. The other objects found at this level
-may be a File-Type box, Free Space Boxes, Movie Fragments, Meta-data, or Media Data Boxes.
+\begin{itemize}
+\item \emph{version}: an integer that indicates the version of this box.
+\item \emph{creation\_time}: an integer that indicates the creation time of the media track.
+\item \emph{modification\_time}: an integer that indicates the most recent time the media track was modified.
+\item \emph{timescale}: an integer that specifies the time-scale for the entire media. It indicated how many units pass in one second.
+\item \emph{duration}: an integer representing the length, in terms of time, of the media track.
+\item \emph{language}: it specifies the language code for the media track.
+\end{itemize}
 
+It is advised that the Media Header Box should be placed first in its container.
+
+\subsection*{Handler Reference Box}
+
+The Handler Reference Box (\emph{hdlr}) is a mandatory and unique boxes that is contained inside a Media Box or a Meta Box. When inside a Media Box, it specifies the nature of the media track. For example, a video track will be handled by a video handler and a sound track will be handled by a sound handler. When inside a Meta Box, it indicates the format of content of the Meta box.
+
+It contains the following fields:
+
+\begin{itemize}
+\item \emph{version}: an integer that specifies the version of the box.
+\item \emph{handler\_type}: when inside a Media Box, it is an integer containing 'vide' for video tracks, 'soun' for sound track or 'hint' for hint track; when inside a Meta Box,  it contains a value indicating the format of the content of the Meta Box.
+\item \emph{name}: a string of characters that associates a human-readable name for the media track type.
+\end{itemize} 
+
+\subsection*{Media Information Box}
+
+The Media Information Box (\emph{minf}) is a mandatory and unique box that is located inside the Media Box. It contains characteristic information about the media track.
+
+\subsection*{Video Media Header Box}
+
+The Video Media Header Box (\emph{vmhd}) is media information header box located inside the Media Information Box. It contains general information about the video track. The box \emph{vmhd} has the following fields:
+
+\begin{itemize}
+\item \emph{version}: an integer that specifies the version of the box.
+\item \emph{graphicmode}: it specifies a composition mode for the video track.
+\item \emph{opcolor}: is an RGB value that is available for use by the graphics modes.
+\end{itemize}
+
+\subsection*{Sound Media Header Box}
+
+The Sound Media Header Box (\emph{smhd}) is a media information header box located inside the Media Information Box. It contains general information about the audio track. The box \emph{smhd} has the following fields:
+
+\begin{itemize}
+\item \emph{version}: an integer that specifies the version of the box.
+\item \emph{balance}: a number that places mono audio tracks in a stereo space.
+\end{itemize}
+
+\subsection*{Hint Media Header Box}
+
+The Hint Media Header Box (\emph{hmhd}) is a media information header box located inside the Media Information Box. It contains general information about the hint track.
+
+\subsection*{Data Information Box}
+
+The Data Information Box (\emph{dinf}) is unique box that is mandatory within a Media Information Box. It can also be located inside a Meta Box and contains the location of the media information in a track.
+
+\subsection*{Data Reference Box}
+
+The Data Reference Box (\emph{dref}) is a mandatory and unique box located within a Data Information Box. It contains a table of data references (URLs) that specifies the location of the media data used within the video file.
+
+\subsection*{Sample Table Box}
+
+The Sample Table Box (\emph{stbl}) is a mandatory and unique box situated inside the Media Information Box. It contains entries tables that specify the location of the sample, the type of the sample, determine their size and offset within the container. Such tables are contained in sub-boxes that indicates information about sample description (\emph{stsd}), sample size (\emph{stcz}), sample to chunk (\emph{stcs}), chunck offset (\emph{stco}), etc.
+
+
+\subsection*{User Data Box}
+
+The User Data Box (\emph{udta}) is an optional box that can either be contained inside a Movie Box or a Track Box. It contains objects that specify user information about the presentation or the track. It contains a set of boxes with more box type that indicates more precisely their content.
+
+It is advised that the User Data Box should be placed last in its container.

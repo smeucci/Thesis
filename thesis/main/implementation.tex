@@ -54,12 +54,12 @@ The Video Format Tool is a software application that we have developed mainly to
 
 The implemented features are:
 \begin{itemize}
-\item[-] \emph{Parse}: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the \emph{MP4Parser} library \cite{mp4parser} and it saves it in an XML file, using the \emph{JDOM} library \cite{jdom}.
-\item[-] \emph{Batch parse}: given as input a folder containing video files, it parses all the videos in the folder and sub-folder, saving them into XML files by recreating the same folder structure.
-\item[-] \emph{Draw}: it is used to draw in a window a tree, given an XML file as input that represents a video file container.
-\item[-] \emph{Merge}: given two XML input files, it combines them into a single XML file. By taking one as the base for the merge, it adds to it the atoms that only the other XML file has. Also, for atoms that are in common, it considers the attributes and, by looking at their values, it adds them to the base XML files, so that for each attribute we will have a vector of values.
-\item[-] \emph{Update}: it is an advanced method to use the merge. Instead of giving two XML files as input, it takes a folder that contains XML files and combines them into a single XML as explained above. It also considers sub-folders.
-\item[-] \emph{Compare}: given two XML files, it compares them, and it returns a measure of how much they differ.
+\item \emph{Parse}: given input MP4-like format video file (MP4 and MOV), it extracts the file container using the \emph{MP4Parser} library \cite{mp4parser} and it saves it in an XML file, using the \emph{JDOM} library \cite{jdom}.
+\item \emph{Batch parse}: given as input a folder containing video files, it parses all the videos in the folder and sub-folder, saving them into XML files by recreating the same folder structure.
+\item \emph{Draw}: it is used to draw in a window a tree, given an XML file as input that represents a video file container.
+\item \emph{Merge}: given two XML input files, it combines them into a single XML file. By taking one as the base for the merge, it adds to it the atoms that only the other XML file has. Also, for atoms that are in common, it considers the attributes and, by looking at their values, it adds them to the base XML files, so that for each attribute we will have a vector of values.
+\item \emph{Update}: it is an advanced method to use the merge. Instead of giving two XML files as input, it takes a folder that contains XML files and combines them into a single XML as explained above. It also considers sub-folders.
+\item \emph{Compare}: given two XML files, it compares them, and it returns a measure of how much they differ.
 \end{itemize}
 
 \subsection{Implementation} 
@@ -138,37 +138,37 @@ In the following section, we will explain how to use the command-line interface 
 
 \begin{itemize}
 
-\item[-] Extract a file container from a video and save it into an XML file.
+\item Extract a file container from a video and save it into an XML file.
 \begin{lstlisting}
 vft --parse -i input.mp4 -o /output_folder
 \end{lstlisting}
 
-\item[-] Batch parse a directory of videos. It also recreates the same sub-folders structure.
+\item Batch parse a directory of videos. It also recreates the same sub-folders structure.
 \begin{lstlisting}
 vft --batch -i /input_folder -o /output_folder
 \end{lstlisting}
 
-\item[-] Draw a tree from an input XML file.
+\item Draw a tree from an input XML file.
 \begin{lstlisting}
 vft --draw -i input.xml
 \end{lstlisting}
 
-\item[-] Merge two XML files, with or without consider the attributes.
+\item Merge two XML files, with or without consider the attributes.
 \begin{lstlisting}
 vft --merge -wa -i input.xml -i2 input2.xml -o /output_folder
 \end{lstlisting}
 
-\item[-] Merge all XML files in a given directory into a single XML file saved in the output folder, with or without attributes. It also considers XML files in sub-directories.
+\item Merge all XML files in a given directory into a single XML file saved in the output folder, with or without attributes. It also considers XML files in sub-directories.
 \begin{lstlisting}
 vft --update-config -wa -i /input_folder -o /output_folder
 \end{lstlisting}
 
-\item[-] Compare two XML files and return a measure of how much they differ.
+\item Compare two XML files and return a measure of how much they differ.
 \begin{lstlisting}
 vft --compare -i input.xml -i2 input2.xml
 \end{lstlisting}
 
-\item[-] Print the help message.
+\item Print the help message.
 \begin{lstlisting}
 vft --help
 \end{lstlisting}
@@ -185,9 +185,9 @@ The File Origin Analysis Tool is the software application implements the theory 
 The main features are:
 \begin{itemize}
 
-\item[-] Training: given two sets of videos, one representing a class $C$ and the other a class $\overline{C}$, it will create $\Omega$, saved as an XML file. Then, for each attribute $\omega$, it will compute the discriminant power regarding the class $C$ and the class $\overline{C}$, respectively.
+\item Training: given two sets of videos, one representing a class $C$ and the other a class $\overline{C}$, it will create $\Omega$, saved as an XML file. Then, for each attribute $\omega$, it will compute the discriminant power regarding the class $C$ and the class $\overline{C}$, respectively.
 
-\item[-] Test: given a query video $X$, for each attribute $\omega_{j} \in X$ it will check the corresponding discriminant power estimated by the previous training phase for both the class $C$ and the class $\overline{C}$. By combining all the discriminant powers of all the attributes $\omega_{j}$, it will compute a measure, representing the likelihood that $X$ belongs to the class $C$.
+\item Test: given a query video $X$, for each attribute $\omega_{j} \in X$ it will check the corresponding discriminant power estimated by the previous training phase for both the class $C$ and the class $\overline{C}$. By combining all the discriminant powers of all the attributes $\omega_{j}$, it will compute a measure, representing the likelihood that $X$ belongs to the class $C$.
 
 \end{itemize}
 
@@ -259,17 +259,17 @@ In the following section, we will explain how to use the command-line interface 
 
 \begin{itemize}
 
-\item[-] Compute the configuration files for given classes $C$ and $\overline{C}$.
+\item Compute the configuration files for given classes $C$ and $\overline{C}$.
 \begin{lstlisting}
 foa --train --listA classC.json --listB classNotC.json -o /output_folder
 \end{lstlisting}
 
-\item[-] Given two classes $C$ and $\overline{C}$, test if a video $X$ belongs to class $C$.
+\item Given two classes $C$ and $\overline{C}$, test if a video $X$ belongs to class $C$.
 \begin{lstlisting}
 foa --test -i input.xml --configA configC.xml --configB configNotC.xml
 \end{lstlisting}
 
-\item[-] Print the help message.
+\item Print the help message.
 \begin{lstlisting}
 vft --help
 \end{lstlisting}
@@ -289,7 +289,7 @@ From the navigation bar at the top of the page, it is possible to select the fea
 
 \begin{itemize}
 
-\item[-] \emph{Classify}: this feature is use for Source Classification purposes. As shown in \ref{fig:classify}, the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
+\item \emph{Classify}: this feature is use for Source Classification purposes. As shown in \ref{fig:classify}, the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
 
 \begin{figure}
   \centering
@@ -318,7 +318,7 @@ If a class is composed of brand, model, and operating system the complementary c
 If a class is composed of brand and model, leaving the default value Any to the operating system field, the complement class $\overline{C}$ is chosen by taking the videos of the ground truth from the same brand but that have a different model.
 Finally, if for a class is specified only the brand field, the complementary class $\overline{C}$ is composed by a sample of all the videos from the ground truth that are from a different brand. This case is the most general and equivalent to choosing a sample of the entire population as the reference.
 
-\item[-] \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two videos, one representing the reference and the other the query for which the integrity must be assessed. Once the operation is concluded, in the Output box will be shown the results of the comparison by displaying the number of difference that the query videos have with regards to the reference video and vice-versa. It is also possible to show the atoms and the attributes for which the differences are found, as shown in \ref{fig:compare}.
+\item \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two videos, one representing the reference and the other the query for which the integrity must be assessed. Once the operation is concluded, in the Output box will be shown the results of the comparison by displaying the number of difference that the query videos have with regards to the reference video and vice-versa. It is also possible to show the atoms and the attributes for which the differences are found, as shown in \ref{fig:compare}.
 
 \begin{figure}
   \centering
@@ -326,7 +326,7 @@ Finally, if for a class is specified only the brand field, the complementary cla
   \caption{For the \emph{Compare}, it is also shown the atoms and the attributes for which the differences are found.}\label{fig:compare}
 \end{figure}
 
-\item[-] \emph{Test}: the \emph{Test} functionality is just an utility to iterate the \emph{Classify} over many videos without the need to manually upload each one. In fact, the query videos are stored in a table of the web application database along with information about their true class. The output results will be the same as for the \emph{Classify} but with the addition of statistics about the accuracy of the classification.
+\item \emph{Test}: the \emph{Test} functionality is just an utility to iterate the \emph{Classify} over many videos without the need to manually upload each one. In fact, the query videos are stored in a table of the web application database along with information about their true class. The output results will be the same as for the \emph{Classify} but with the addition of statistics about the accuracy of the classification.
 
 \end{itemize}
 

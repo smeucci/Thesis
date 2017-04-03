@@ -42,8 +42,8 @@ In general, the feature extraction is based on the analysis of traces left on bo
 
 As for the inspection of the data stream, specifically for images and videos, the examination consists of two most important aspects:
 \begin{itemize}
-\item[-] interpretation of the content, which is the analysis of the content to understand what the data represents, who are the subjects and the objects involved, what is the environment. In general, the goal it to retrieve all the information that can be extrapolated from human observation.
-\item[-] identification of sensitive details from the scene represented, such as audio-visual anomalies, the direction of the light, shadows, perspective inconsistencies, smudge marks, and so on.
+\item interpretation of the content, which is the analysis of the content to understand what the data represents, who are the subjects and the objects involved, what is the environment. In general, the goal it to retrieve all the information that can be extrapolated from human observation.
+\item identification of sensitive details from the scene represented, such as audio-visual anomalies, the direction of the light, shadows, perspective inconsistencies, smudge marks, and so on.
 \end{itemize}
 
 Also in the context of the inspection of the audio-visual signal, a useful technique is to enhance the content, such as the improvement of the signal to detect relevant details or objects, the extraction of dimensional relationships between subjects and objects, the visual comparison between known objects and objects represented in the scene.
@@ -71,25 +71,25 @@ Apple introduced the MOV \cite{mov} container format in 1991. Using this format 
 
 The video file containers of this formats are composed of atoms (sometimes called boxes) that are identified by a unique 4 bytes characters, preceded by the size of the atom. These atoms can have fields and can be nested, i.e. an atom may contain another atom. Thus, four types of atoms can be encountered:
 \begin{itemize}
-\item[-] atoms without fields and that do not contain other atoms.
-\item[-] atoms without fields but that contain other atoms.
-\item[-] atoms with fields that do not contain other atoms.
-\item[-] atoms with fields that also contain other atoms.
+\item atoms without fields and that do not contain other atoms.
+\item atoms without fields but that contain other atoms.
+\item atoms with fields that do not contain other atoms.
+\item atoms with fields that also contain other atoms.
 \end{itemize}
 
 The most typical structure of the MP4-like containers is as follows:
 \begin{itemize}
-\item[-] \emph{ftyp} atom: it is semi-mandatory, i.e. the latest ISO standards expect it to be present and to be explicit as soon as possible in the file container. It refers to the specific file types with which the video file, to which the container belongs, is compatible.
-\item[-] \emph{mdat} atom: it contains the data stream and specifies its size.
-\item[-] \emph{moov} atom: it is the atom with the most complex structure of the container. It is a nested atom which contains many other atoms. In this atom, and in its sub-structure, is included the metadata needed for the decoding of the data stream contained in the \emph{mdat} atom.
+\item \emph{ftyp} atom: it is semi-mandatory, i.e. the latest ISO standards expect it to be present and to be explicit as soon as possible in the file container. It refers to the specific file types with which the video file, to which the container belongs, is compatible.
+\item \emph{mdat} atom: it contains the data stream and specifies its size.
+\item \emph{moov} atom: it is the atom with the most complex structure of the container. It is a nested atom which contains many other atoms. In this atom, and in its sub-structure, is included the metadata needed for the decoding of the data stream contained in the \emph{mdat} atom.
 \end{itemize}
 
 This structure is not always respected. The file container of the MP4-like formats are very complex and have many elements and differences that depend on the source and the manufacturing company; thus it can constitute a valuable tool for the Forensic Analysis.
 The differences of containers across multiple types of video files can be found in many ways, as explained as follows:
 \begin{itemize}
-\item[-] the relative position of the atoms: although the standard gives specifications about the location of specifics atoms (especially the main ones described above), these indications are not always respected. Above all, there is a change in position for those atoms whose position is not specified but the standard. This fact is true both for the atoms at the first level, such as \emph{ftyp}, \emph{mdat}, \emph{moov}, and for the atoms of the sub-structure contained in the \emph{moov} atom.
-\item[-] the presence of additional non-standard atoms at all level of the container.
-\item[-] the differences in the fields values of the atoms.
+\item the relative position of the atoms: although the standard gives specifications about the location of specifics atoms (especially the main ones described above), these indications are not always respected. Above all, there is a change in position for those atoms whose position is not specified but the standard. This fact is true both for the atoms at the first level, such as \emph{ftyp}, \emph{mdat}, \emph{moov}, and for the atoms of the sub-structure contained in the \emph{moov} atom.
+\item the presence of additional non-standard atoms at all level of the container.
+\item the differences in the fields values of the atoms.
 \end{itemize}
 
 All these possible differences and types of differences give rise to a large set of combinations that the Forensic Analyst can use to analyze a digital video resource.
