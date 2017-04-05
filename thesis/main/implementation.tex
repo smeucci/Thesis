@@ -293,7 +293,7 @@ From the navigation bar at the top of the page, it is possible to select the fea
 
 \begin{itemize}
 
-\item \emph{Classify}: this feature is use for Source Classification purposes. As shown in \ref{fig:classify}, the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
+\item \emph{Classify}: this feature is use for Source Classification purposes. As shown in Fig. \ref{fig:classify}, the user can upload the query video or directly the XML file representing the file container from the Upload box and, from the Class box, select the class for which they want to determine the belonging of the query video. The results will then be outputted in the Output box. 
 
 \begin{figure}
   \centering
@@ -305,7 +305,7 @@ It can work in two different ways. If the user explicitly selects a class (a bra
 
 The manual mode is used when the user already has an assumption about the query video source device and wants to assess its correctness. Choosing a particular class is equal to asking a binary question: does the query video belongs to this selected class? The application will proceed to split the ground-truth accordingly and will compute and return the likelihood for the query video regarding the selected device class.
 
-The automatic mode is typically used when no assumption is made about the query video origin. Instead of one binary problem, we pose as many binary problems as there are classes of devices in our ground-truth dataset of videos. For each class, the likelihood will be computed and then sorted with regards to all other. The outputted result, as shown in \ref{fig:classify-output}, will be a list of classes sorted by likelihood in decreasing order.
+The automatic mode is typically used when no assumption is made about the query video origin. Instead of one binary problem, we pose as many binary problems as there are classes of devices in our ground-truth dataset of videos. For each class, the likelihood will be computed and then sorted with regards to all other. The outputted result, as shown in Fig. \ref{fig:classify-output}, will be a list of classes sorted by likelihood in decreasing order.
 
 The \emph{Classify} feature also allow the user to upload and compute the likelihood for more than one query video at a time.
 
@@ -322,7 +322,7 @@ If a class $C$ is composed of brand, model, and operating system the complementa
 If a class $C$ is composed of brand and model, leaving the default value \emph{Any} to the operating system field, the complement class $\overline{C}$ is chosen by taking the videos of the ground-truth from the same brand but that have a different model.
 Finally, if for a class$C$  is specified only the brand field, the complementary class $\overline{C}$ is composed by a sample of all the videos from the ground-truth that are from a different brand. This case is the most general and equivalent to choosing a sample of the entire population as the reference.
 
-\item \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two videos, one representing the reference and the other the query for which the integrity must be assessed. Once the operation is concluded, in the Output box will be shown the results of the comparison by displaying the number of differences that the query videos have with regards to the reference video and vice-versa. It is also possible to show the atoms and the attributes for which the differences are found, as shown in \ref{fig:compare}.
+\item \emph{Compare}: this functionality allows the user to verify the integrity of a query video, exploiting the \emph{compare} feature of the \emph{Video Format Tool} application. The user must upload two videos, one representing the reference and the other the query for which the integrity must be assessed. Once the operation is concluded, in the Output box will be shown the results of the comparison by displaying the number of differences that the query videos have with regards to the reference video and vice-versa. It is also possible to show the atoms and the attributes for which the differences are found, as shown in Fig. \ref{fig:compare}.
 
 \begin{figure}
   \centering

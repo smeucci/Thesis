@@ -1,9 +1,54 @@
 \chapter{Experiments and results}
 
+\section{Dataset}
+
+The dataset used in this thesis is composed of video coming from smartphones and tablets with operating system \emph{Android} and \emph{iOS}. 
+Videos that have an \emph{Android} acquisition device have a file container that follows the standard of the MP4 \cite{mp4} file format while videos that have an \emph{iOS} acquisition device have a file container that follows the standard of the MOV file format \cite{mov}.
+The full list of devices of our dataset can be seen from Table \ref{devices}). 
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{OS}       & \textbf{BRAND}    & \textbf{MODEL}             & \textbf{\#}			 \\ \hline
+Android &         &                   & 150         \\ \hline
+        & Samsung &                   & 132         \\ \hline
+        &         & Galaxy S3         & 18          \\ \hline
+        &         & Galaxy S3 mini    & 36          \\ \hline
+        &         & Galaxy S4 mini    & 18          \\ \hline
+        &         & Galaxy Tab 3      & 36          \\ \hline
+        &         & Galaxy Tab A      & 9           \\ \hline
+        &         & Galaxy Trend Plus & 15          \\ \hline
+        & Huawei  &                   & 18          \\ \hline
+        &         & G6                & 18          \\ \hline
+iOS     &         &                   & 110         \\ \hline
+        & Apple   &                   & 110         \\ \hline
+        &         & iPad 2            & 15          \\ \hline
+        &         & iPad mini         & 15          \\ \hline
+        &         & iPhone 4S         & 14          \\ \hline
+        &         & iPhone 5C         & 18          \\ \hline
+        &         & iPhone 5          & 31          \\ \hline
+        &         & iPhone 6          & 17          \\ \hline
+        &         &                   & 260         \\ \hline
+
+\end{tabular}
+\caption{The list of devices in the dataset divided by operating system, brand and model.}
+\label{devices}
+\end{table}
+
+
+For each device, we have videos that are directly acquired and the same videos that have been modified by different means:
+
+\begin{itemize}
+\item videos that have been uploaded and then downloaded from 	\emph{Youtube}.
+\item videos that have been modified using the software tool \emph{Ffmpeg} \cite{}.
+\item videos that have been modified using the software tool \emph{Exiftool} \cite{}.
+\end{itemize}
+
 \section{Integrity Analysis based on File Container}
 
 
-\section{Model Identification based on File Container}
+\section{Source Identification based on File Container}
 
 
 \section{Application on Social Network}
