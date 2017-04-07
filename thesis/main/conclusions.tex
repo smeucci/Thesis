@@ -1,3 +1,27 @@
 \chapter*{Conclusions}
 \addcontentsline{toc}{chapter}{Conclusions}
 \chaptermark{Conclusions}
+
+In this thesis, we have proposed an approach for forensic analysis of video file containers. Our method exploits the differences in the file containers structure and content from different manufacturers. In particular, we have dealt with Source Identification and Integrity Verification focused on videos taken from smartphones and tablets.
+
+Our method have been implemented in the for of Java program that can be used command line tool. Also, a web application was realized to allow an user to easily upload query videos to test.
+
+The experiments show good results for both the Source Identification and the Integrity Verification.
+
+For the Integrity Verification, we have showed that different using software editing tool on a video leave traces on the file container by either adding new boxes or by changing the structure. Exploit the different structure between the original file container and the processed one we were always able to tell them apart.
+
+For Source Identification, we were able to correctly classify our test videos based on their file containers. The errors in the classification are due to different manufacturers using a very similar structure and by the distribution of the number of devices in the training set.
+
+Still, this is a preliminary work that show that forensic analysis of video file using file containers is an interesting approach. There are many thing to improve:
+
+\begin{itemize}
+\item some boxes, such as xyz, are present only if the gps was active during the recording of the video. This has nothing to do with a class of devices but is unique to the particular video. However, contrary to unique attributes, the addition of a box in the file container drastically changes its structure. It is due by the fact that we use an indexing for each box level in order to harness the information about the location of the boxes.
+
+\item we could improve how attributes values are compared. Right now some attributes that are related only to the specific video are ignored. This could be more elegant if we implemented a comparator function that specializes in a different way accordingly to the kind of attribute we are comparing. For example, comparing the values of the attribute flag is different from comparing the values of the attribute creationTime. For the fist, it is sufficient to directly confront the values; for the latter, it is a better idea to check whether the dates are in the same format. This way we eliminate the need of ignoring certain values and also we could improve the performance of the classification because we would be able to see even more differences.
+
+\item our dataset is limited in terms of number of videos but more specifically in terms of types of devices. It would be interesting to try our method when more devices from different brands and models are available. Moreover, for the videos in our dataset only the generic operating system is known. We do not possess information about the version of the operating systems for each video. Changing the version of an operating system could also mean changes in the file containers. We could harness this information that would allow us to be even more specific in identifying the source device.
+
+\item the problem of how to create the reference population is still open. Maybe there is a better way to use the file containers that allow to use the entire population as a reference.
+
+\end{itemize}
+
