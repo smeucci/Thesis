@@ -4,33 +4,33 @@
 
 In an increasingly digital world, there are more and more applications where digital contents play a significant role.
 
-Thanks to the spread of smartphones and digital cameras, the use of social networks that allow the sharing of digital images and videos is becoming more widespread. These resources, in general, contain information of personal nature; however, since these images and videos are more and more permeating our lives, their content may include information about an event that as occurred and therefore represents a significant source of evidence about a crime that can be used during an investigation.
+Thanks to the spread of smartphones and digital cameras, the use of social networks that allow the sharing of digital images and videos is becoming more widespread. These resources, in general, contain information of personal nature; however, since these images and videos are more and more permeating our lives, their content may include information about an event that has occurred and therefore represents a significant source of evidence about a crime that can be used during an investigation.
 
 In this context, many techniques for the analysis of multimedia content have been developed; these methods pose the goal of providing aid in making decisions about a crime so that a digital resource can be legitimately used as evidence in a courtroom.
 
-Such is the task of the Forensic Analysis and in particular of Multimedia Forensics, i.e. to developed and apply techniques that allow, with a certain degree of accuracy, to determine whether the content of a digital resource is authentic or if it has been manipulated.
+Such is the task of the Forensic Analysis and in particular of Multimedia Forensics, i.e. to develop and apply techniques that allow, with a certain degree of precision, to determine whether the content of a digital resource is authentic or if it has been manipulated.
 
-The questions that the Forensic Analyst must answer about these digital contents are:
+The questions that the Forensic Analyst must answer about digital contents are:
 \begin{itemize}
-\item[-] authenticity assessment, or whether what they represent is true and correspond to reality.
-\item[-] integrity verification, or if they have been altered in such a way that does not compromise their authenticity.
-\item[-] the determination of the acquisition device, a problem that in Forensic Analysis takes the name of Source Classification or Source Identification.
+\item authenticity assessment, or whether what they represent is true and correspond to reality.
+\item integrity verification, i.e. if they have been altered in such a way that, however, does not compromise their authenticity.
+\item the determination of the acquisition device, a problem that in Forensic Analysis takes the name of Source Classification or Source Identification.
 \end{itemize}
 
 To give a better understanding of these problems, we provide some application scenarios.
 
 Regarding the Source Identification, imagine a situation in which the very act of creation of an image or video constitutes a crime, due to the content of the digital resource. In this scenario, it is crucial to establish the source device that generated the offending resource, so that this resource can be used as evidence. Depending on the context, determine the origin of a digital content could mean to find the particular acquisition device or the typology of the acquisition device or establish the last processing stage, such as a compression algorithm or an editing step.
 
-In this context, it is also important the integrity check of a digital resource. In fact, the owner of the device that created the offending digital content could change the resource in such a way that it's not possible to trace back its source.
+In this context, it is also important the integrity assessment of a digital resource. In fact, the owner of the device that created the offending digital content could change the resource in such a way that it's not possible to trace back its source.
 
 A more particular scenario, regarding the authenticity of a multimedia resource, is when the digital content is changed so as to deceive those who are watching it. The reasons for this manipulation can be different, such as the exaggeration or limitation of the severity of an accident or disaster, as well to change the context of the situation represented.
 
-The tools available to the Multimedia Forensics are only those that can be extracted from the digital content itself. In fact, the fundamental idea of forensic analysis of digital content is based on the observation that both the acquisition process and the post-processing step leave traces, called digital fingerprints. It is the task of the Forensic Analyst to analyze these fingerprints to determine the history and the authenticity of a digital content so that it can be used as evidence in a digital investigation.
+The tools available to the Multimedia Forensics are only those that can be extracted from the digital content itself. In fact, the fundamental idea of forensic analysis of digital content is based on the observation that both the acquisition process and the post-processing steps leave traces, called digital fingerprints. It is the task of the Forensic Analyst to analyze these fingerprints to determine the history and the authenticity of a digital content so that it can be used as evidence in a digital investigation.
 
 In this regard, the analysis techniques of digital content mainly focused on two approaches. The first is the analysis of the data stream, i.e. the audio-visual signal, which is based on the research of artifacts and inconsistency in the digital content. The second is the analysis of the metadata, i.e. the determination of their compatibility, completeness, and consistency \cite{Piva} with regards to the context in which it is assumed the resource has been created.
 
 Digital Image Forensics has extensively treated the presented issues; instead, regarding the Digital Video Forensics, the research for these problems is still under study and improvement. The motivation for this discrepancy lies in the much easier way that an image can be falsified than a digital video and the several video formats (MPEG, MPEG2, H26x, VP8, etc.) in contrast to the few main formats for digital images (mostly JPEG, PNG, TIFF).
 
-This thesis proposes a technique for forensic analysis of digital video based on \emph{Gloe et al.} \cite{Gloe2014S68}, whose work focuses on the study of some video formats standard and the use of the internal structure of the video file container as a tool for the forensic analysis. This choice if justified by the fact that the video file container is very fragile so that it can contain a lot of information about the history of a digital video. Both the acquisition phase and the subsequent post-processing steps or the editing of the file using various tools, modify the content and the structure of the container. This fact can be exploited both regarding Source Identification and Integrity Verification.
+This thesis proposes a technique for forensic analysis of digital video based on \emph{Gloe et al.} \cite{Gloe2014S68}, whose work focuses on the study of some video formats standard and the use of the internal structure of the video file container as a tool for the forensic analysis. This choice is justified by the fact that the video file container is very fragile so that it can contain a lot of information about the history of a digital video. Both the acquisition phase and the subsequent post-processing steps modify the content and the structure of the container. This fact can be exploited both regarding Source Identification and Integrity Verification.
 
 The thesis is divided into chapters as follows. Chapter 1 provides an introduction to Multimedia Forensics, discussing both the state of the art techniques and the standards to be followed in all aspects of a digital investigation; it also explained in greater detail the work done by \emph{Gloe et al.} \cite{Gloe2014S68}, giving more information on video file containers. Chapter 2 will describe in detail the structure of the video file containers for MP4-like formats. In Chapter 3, it is presented the proposed approach along with all the choices made and the details of the implemented tool. Finally, Chapter 4 will show the dataset used and explain the motivation and the organization of the experiments along with a discussion of the results obtained.

@@ -69,7 +69,13 @@ The \emph{Ffmpeg} tool is a cross-platform software to record, modify, convert a
 ffmpeg -i input.mp4 -ss 00:00:00 -t 00:00:10 -acodec copy -vcodec copy output.mp4
 \end{lstlisting}
 
-The distances have been computed as explained above. As we can see from Fig (ref), the two classes, i.e. the set of distances between original videos and the set of distances between original and processed videos, are greatly separated. This fact means that there is an ample range of threshold values for which the accuracy is maximized. For this case, we have a max accuracy of 1 for a range of threshold values between 0.11 and 0.66.
+The distances have been computed as explained above. As we can see from Fig. \ref{fig:ffmpeg-hist}, the two classes, i.e. the set of distances between original videos and the set of distances between original and processed videos, are greatly separated. This fact means that there is an ample range of threshold values for which the accuracy is maximized. For this case, we have a max accuracy of 1 for a range of threshold values between 0.11 and 0.66.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{ffmpeg-hist}
+  \caption{The distribution of the number of differences between original videos (in red) and between original videos and videos processed with ffmpeg (in blue).}\label{fig:ffmpeg-hist}
+\end{figure}
 
 The results show that when a video is processed by \emph{Ffmpeg} copying the video stream without re-encoding is enough to greatly alter the file container structure.
 
@@ -82,7 +88,19 @@ The results show that when a video is processed by \emph{Ffmpeg} copying the vid
 exiftool "-AllDates=1986:11:05 12:00:00" "input.mp4"
 \end{lstlisting}
 
-Since we are modifying attributes of the file container that are specific to each unique video, we did not expected this test to perform well. The results are in agreement with this assumption. The changes that \emph{Exiftool} does on a file container are minimal; it just adds a new box at the end of the file, leaving the rest of the structure untouched. As we can see from Fig. ref, it is not possible to find a threshold that correctly separates the two classes of the binary problem.
+Since we are modifying attributes of the file container that are specific to each unique video, we did not expected this test to perform well. The results are in agreement with this assumption. The changes that \emph{Exiftool} does on a file container are minimal; it just adds a new box at the end of the file, leaving the rest of the structure untouched. As we can see from Fig. \ref{fig:exifaal-hist}, it is not possible to find a threshold that correctly separates the two classes of the binary problem.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{exifall-hist}
+  \caption{The distribution of the number of differences between original videos (in red) and between original videos and videos processed with exiftool (in blue).}\label{fig:exifaal-hist}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{exifall-plot}
+  \caption{The ROC curve for the experiment with Exiftool shows how the TPR and FPR varies when changing the threshold value.}\label{fig:brand-roc}
+\end{figure}
 
 This fact happens because, when we consider all devices, the differences between original videos of the same class for the \emph{Android} devices and for the \emph{iOS} devices have different average values. The additional box that \emph{Exiftool} inserts to the file container for each processed videos adds a constant number of differences for every comparison. This causes the curve associated to the differences between original and processed videos of \emph{Android} devices to overlap the curve associated to the differences between original videos for \emph{iOS} devices.
 
@@ -105,13 +123,27 @@ We consider separately the classes that refer to brands and the classes that ref
 \subsubsection*{Brands}
 
 For manual mode, we obtain a maximum accuracy of 0.98 with a range of likelihood values between a and b, determine using the results from the ROC curve shown in Fig. (ref).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{brandig-plot}
+  \caption{The ROC curve for the experiment with Brands classes shows how the TPR and FPR varies when changing the threshold value.}\label{fig:brand-roc}
+\end{figure}
+
 We also determine how precise is the automatic mode by checking the class associated with the higher likelihood ratio. 92\% of the time our method correctly classifies our test videos. For automatic mode, the results can also be visualized in Fig. (ref) where it is shown the confusion matrix. With the confusion matrix we are able to the in which direction the misclassification happened. We can see that the only errors happened because some samsung device are classified as huawei devices. 
 
 \subsubsection*{Brands and Models}
 
 In this case we consider class for which both brand and model are specified. 
 
-For the manual mode, by computing the ROC curve, we obtain a maximum accuracy of 0.94 for a range of likelihood values between a and b.
+For the manual mode, by computing the ROC curve (Fig. \ref{fig:model-roc}, we obtain a maximum accuracy of 0.94 for a range of likelihood values between a and b.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{modelig-plot}
+  \caption{The ROC curve for the experiment with Models classes shows how the TPR and FPR varies when changing the threshold value.}\label{fig:model-roc}
+\end{figure}
+
 For the automatic mode, we also determine the precision of our system by computing how many times the correct class is in the top 1 results, in the top 3 results and in the top 5 results. As shown in the table, the correct class is always at least in the top 3 or top 5 and in 84\% of the cases is in the first result.
 
 \section{Application on Social Network}
@@ -120,7 +152,13 @@ We have also applied our method to videos that comes from a Social Network, spec
 
 The experiments have been carried out similarly to the ones for the Integrity Verification. However, we want to determine if videos from \emph{Youtube} are sufficiently similar to be able to distinguish a video that come directly from a source device from a video of that source device that have been subsequently uploaded and downloaded from \emph{Youtube}.
 
-As can be seen from Fig. (ref), the values representing the number of differences between \emph{Youtube} videos and the ones representing the number of differences between original and \emph{Youtube} videos are greatly separated. We obtain a max accuracy of 1 with a range of threshold values between 0.39 and 0.55.
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{youtube-hist}
+  \caption{The distribution of the number of differences between \emph{Youtube} videos (in red) and between \emph{Youtube} videos and original videos (in blue).}\label{fig:youtube-hist}
+\end{figure}
+
+As can be seen from Fig. \ref{fig:youtube-hist}, the values representing the number of differences between \emph{Youtube} videos and the ones representing the number of differences between original and \emph{Youtube} videos are greatly separated. We obtain a max accuracy of 1 with a range of threshold values between 0.39 and 0.55.
 
 
 
