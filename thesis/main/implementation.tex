@@ -99,7 +99,13 @@ The parsing of the attributes for each box takes place using some wrapper functi
 In addition, we customized the extraction of the attributes, by adding to each box an attribute we called \emph{count} to determine the presence or the absence of the boxes, which will be useful afterwards, especially for boxes that do not have attributes.
 Also, it is extensible in the sense that, if we are in the presence of a new box that we previously never encounter, we can easily add a new wrapper class with a custom \emph{toString()} method, without interfering with the other implementations.
 
-One of the aspects that makes file containers a valuable resource for the forensic analysis is the presence of low-level characteristics such as its structure and the locations of each atom in the containers. To take advantage of this feature, the name of each \emph{JDOM Element} object will be formed by the 4-byte code of the corresponding atom along with an index number that represents the relative position with regards to the other children at a certain level. This indexing is especially useful for exploiting the differences in the container structure: if two file container have a different order for, as an example, the \emph{ftyp}, \emph{mdat} and \emph{moov} atoms, then, by using this indexing, we will be able to notice and harness the variation in the container structure, even when the content is very similar.
+One of the aspects that makes file containers a valuable resource for the forensic analysis is the presence of low-level characteristics such as its structure and the locations of each atom in the containers. To take advantage of this feature, the name of each \emph{JDOM Element} object will be formed by the 4-byte code of the corresponding atom along with an index number that represents the relative position with regards to the other children at a certain level. This indexing is especially useful for exploiting the differences in the container structure: if two file container have a different order for, as an example, the \emph{ftyp}, \emph{mdat} and \emph{moov} atoms, then, by using this indexing, we will be able to notice and harness the variation in the container structure, even when the content is very similar. The example in Fig. \ref{fig:treeS3vsS3mini} shows two file containers in comparison, one from a Samsung Galaxy S3 and the other from a Samsung Galaxy S3 mini. The differences in the file containers structures are evident: the position of the box \emph{moov} and of the box \emph{mdat} are different. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{treeS3vsS3mini}
+  \caption{The figure show the first levels of a Samsung Galaxy S3 (to the left) and a Samsung Galaxy S3 mini (to the right) file containers. Even without considering the content of each box, we can clearly see differences in the boxex order.}\label{fig:treeS3vsS3mini}
+\end{figure}
 
 Instead, the position of the attributes of each atom is irrelevant. Whether it is used the \emph{toString()} functions of the \emph{Mp4Parser} library or the one that we implemented as classes that extend a Wrapper interface, the order of the attributes is still arbitrarily decided by either one of the two proxies. This fact means that the order has nothing to do with choices that the manufacturer made and it cannot help to determine the source device or platform of a video file.
 
@@ -107,7 +113,13 @@ Instead, the position of the attributes of each atom is irrelevant. Whether it i
 
 In order to represent the XML files as objects, a custom \emph{Tree} object is built from each \emph{JDOM Element}, so that they can be manipulated more easily accordingly to our needs.
 
-The \emph{Tree} interface is implemented in order to maintain the same nested structure of an XML file that represents a file container. It is used as the \emph{Component} class in the \emph{Composite} pattern to implements trees. The same as a file container or an XML file, a tree can have children, which are other sub-trees, and fields, which are couples of name and value.
+The \emph{Tree} interface is implemented in order to maintain the same nested structure of an XML file that represents a file container. It is used as the \emph{Component} class in the \emph{Composite} pattern (Fig. \ref{}) to implements trees. The same as a file container or an XML file, a tree can have children, which are other sub-trees, and fields, which are couples of name and value.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{tree}
+  \caption{Class diagram to show how the \emph{Tree} interface is implemented using the \emph{Composite} pattern.}\label{fig:tree}
+\end{figure}
 
 Each tag of an XML file can be a \emph{Node} or a \emph{Leaf}, both classes that implement the \emph{Tree} interface. Each \emph{Tree} object has a name as an identifier, a \emph{String} variable whose value is taken from the name of the tag, a father, that is another Tree object or a \emph{Null} object for the root Tree object, a list of children \emph{Tree} objects and a list of \emph{Field} objects, that correspond to the attributes of the XML tag.
 
