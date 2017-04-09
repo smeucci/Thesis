@@ -36,10 +36,20 @@ Then we determine the likelihood of observing $\omega_{j} \in X, j = 1,...,t$ fo
 $$ P(\omega_{j}\vert H_{0}) = \Omega_{\overline{C}}(\omega_{j}) $$
 $$ P(\omega_{j}\vert H_{1}) = \Omega_{C}(\omega_{j}) $$ 
 
-Supposing that $\omega_{j}$ are independently distributed we can compute a likelihood ratio
+The likelihood is used to describe a function of parameters for a given outcome. In general, let $Y$ be a random variable with a discrete probability distribution that depends on a parameter $\theta$; then the function
+
+$$ L(\theta | y) = P(Y = y; \theta) $$
+
+is referred to as the likelihood function of a parameter $\theta$ for a given outcome $y$ of the random variable $Y$.
+
+In our case, we have a vector of parameters represented by the attributes $\omega_{j}$ of the file container of a query video $X$ and the given outcome is represented by the query video belonging to the class $C$. Thus, the likelihood function becomes
+
+$$ L(\overline{\omega} | X \in C) = P(X \in C; \overline{\omega}) $$
+
+Supposing that $\omega_{j}$ are independently distributed we can compute the likelihood function for our case as
 
 \begin{equation}\label{eq:likelihood}
-L(X) = \prod\limits_{\omega_{j}}\dfrac{\Omega_{C}(\omega_{j} }{\Omega_{\overline{C}}(\omega_{j}}
+L(X) = \prod\limits_{\omega_{j}}\dfrac{\Omega_{C}(\omega_{j}) }{\Omega_{\overline{C}}(\omega_{j})}
 \end{equation}
 
 to determine whether a query video $X$ belongs to the class $C$.
@@ -99,12 +109,12 @@ The parsing of the attributes for each box takes place using some wrapper functi
 In addition, we customized the extraction of the attributes, by adding to each box an attribute we called \emph{count} to determine the presence or the absence of the boxes, which will be useful afterwards, especially for boxes that do not have attributes.
 Also, it is extensible in the sense that, if we are in the presence of a new box that we previously never encounter, we can easily add a new wrapper class with a custom \emph{toString()} method, without interfering with the other implementations.
 
-One of the aspects that makes file containers a valuable resource for the forensic analysis is the presence of low-level characteristics such as its structure and the locations of each atom in the containers. To take advantage of this feature, the name of each \emph{JDOM Element} object will be formed by the 4-byte code of the corresponding atom along with an index number that represents the relative position with regards to the other children at a certain level. This indexing is especially useful for exploiting the differences in the container structure: if two file container have a different order for, as an example, the \emph{ftyp}, \emph{mdat} and \emph{moov} atoms, then, by using this indexing, we will be able to notice and harness the variation in the container structure, even when the content is very similar. The example in Fig. \ref{fig:treeS3vsS3mini} shows two file containers in comparison, one from a Samsung Galaxy S3 and the other from a Samsung Galaxy S3 mini. The differences in the file containers structures are evident: the position of the box \emph{moov} and of the box \emph{mdat} are different. 
+One of the aspects that makes file containers a valuable resource for the forensic analysis is the presence of low-level characteristics such as its structure and the locations of each atom in the containers. To take advantage of this feature, the name of each \emph{JDOM Element} object will be formed by the 4-byte code of the corresponding atom along with an index number that represents the relative position with regards to the other children at a certain level. This indexing is especially useful for exploiting the differences in the container structure: if two file container have a different order for, as an example, the \emph{ftyp}, \emph{mdat} and \emph{moov} atoms, then, by using this indexing, we will be able to notice and harness the variation in the container structure, even when the content is very similar. The example in Fig. \ref{fig:treeS3vsS3mini} shows two file containers in comparison, one from a Samsung Galaxy S3 and the other from a Samsung Galaxy S3 mini. We can exploit the differences in position of the boxes \emph{moov} and \emph{mdat} to determine that the two file containers come from two different devices, even without taking into account the differences or the similarities in the content of those boxes. 
 
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{treeS3vsS3mini}
-  \caption{The figure show the first levels of a Samsung Galaxy S3 (to the left) and a Samsung Galaxy S3 mini (to the right) file containers. Even without considering the content of each box, we can clearly see differences in the boxex order.}\label{fig:treeS3vsS3mini}
+  \caption{The figure shows the first levels of two file containers, one from a Samsung Galaxy S3 video (to the left) and the other from a Samsung Galaxy S3 mini video (to the right). Even without considering the content of each box, we can exploit the differences in the structures and boxes order to assess that the two file containers come from two different devices.}\label{fig:treeS3vsS3mini}
 \end{figure}
 
 Instead, the position of the attributes of each atom is irrelevant. Whether it is used the \emph{toString()} functions of the \emph{Mp4Parser} library or the one that we implemented as classes that extend a Wrapper interface, the order of the attributes is still arbitrarily decided by either one of the two proxies. This fact means that the order has nothing to do with choices that the manufacturer made and it cannot help to determine the source device or platform of a video file.
@@ -235,8 +245,8 @@ In the test phase, given a query video $X$, we want to determine, based on its f
 The constructor of the class \emph{Test} takes as arguments the path of the XML file, that represent the file container of the query video, and the paths for the configuration XML files for both class $C$ and class $\overline{C}$.
 The method \emph{test()} will build a \emph{Tree} object for each of the passed XML file. Then, it will create a \emph{StandarLikelihood} object, a class that implements the \emph{Likelihood} interface. In this way, we can change and customized how we want the likelihood to be computed.
 
-The \emph{StandardLikelihood} implements the Eq. \ref{likelihood} and works as follows. Using the \emph{computeLikelihood()} method, it explores all the atoms of the query \emph{Tree} object. For each of these atoms, it will search for the corresponding one in both configuration \emph{Tree} objects. For each attribute of the atom under examination, it will compute the ratios between the weights from both classes associated with that value, with the weight for the class $C$ as a numerator and the weight for the class $\overline{C}$ as denominator. All the ratios for each attribute of the query file container will then be multiplied between them, obtaining a likelihood measure $L(X)$, which is then smoothed with the natural logarithm. 
-The final result $l(X) = ln(L(X))$ can be used to determine whether X belongs to the class $C$.
+The \emph{StandardLikelihood} implements the Eq. \ref{eq:likelihood} and works as follows. Using the \emph{computeLikelihood()} method, it explores all the atoms of the query \emph{Tree} object. For each of these atoms, it will search for the corresponding one in both configuration \emph{Tree} objects. For each attribute of the atom under examination, it will compute the ratios between the weights from both classes associated with that value, with the weight for the class $C$ as a numerator and the weight for the class $\overline{C}$ as denominator. All the ratios for each attribute of the query file container will then be multiplied between them, obtaining a likelihood measure $L(X)$, which is then smoothed with the natural logarithm. 
+The final result $l(X) = log(L(X))$ can be used to determine whether $X$ belongs to the class $C$.
 
 
 \subsubsection*{Implementation Details}

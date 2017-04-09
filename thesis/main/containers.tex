@@ -60,11 +60,11 @@ An overall view of an example of a object-oriented structured file of this forma
 \caption{Box types and structure. The boxes with an asterisk (*) are mandatory.}\label{boxtable}
 \end{table}
 
-The table shows the boxes that shall occur at the top-level of the file in the left-most column, with indentations representing containments. The boxes that are marked with an asterisk (*) are mandatory. In the following, each box of the table will be described, also giving examples taken from the file container of a video from a Samsung Galaxy S3 that uses the MP4 file format.
+The table shows the boxes that shall occur at the top-level of the file in the left-most column, with indentations representing containments. The boxes that are marked with an asterisk (*) are mandatory. In the following, each box of the table will be described.
 
 \subsection{First Level}
 
-At the first level we will find:
+At the first level, we will find:
 
 \subsubsection*{File Type Box (ftyp)}
 
@@ -78,6 +78,14 @@ The box \emph{ftyp} should be positioned at the top-level of a file before every
 \item \emph{minor\_version}: identifies the version of the major specification.
 \item \emph{compatible\_brands}: a list of other compatible specifications.
 \end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{ftyp}
+  \caption{The box \emph{ftyp} of a file container of a video acquired with a Samsung Galaxy S3.}\label{fig:ftyp}
+\end{figure}
+
+An example can be seen in Fig. \ref{fig:ftyp} showing the box \emph{ftyp} of a video acquired with a Samsung Galaxy S3.
 
 \subsubsection*{Movie Box (moov)}
 
@@ -121,6 +129,14 @@ The Movie Header Box (\emph{mvhd}) is a mandatory and unique box that is located
 
 It is advised that the Movie Header Box should be placed first in its container.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{mvhd}
+  \caption{The box \emph{mvhd} of a file container of a video acquired with a Samsung Galaxy S3.}\label{fig:mvhd}
+\end{figure}
+
+An example can be seen in Fig. \ref{fig:mvhd} showing the box \emph{mvhd} of a video acquired with a Samsung Galaxy S3.
+
 \subsubsection*{Track Box (trak)}
 
 The Trak Box (\emph{trak}) is a mandatory box for a file that is located inside the Movie Box. A video contained one or more tracks, such as audio or video tracks, with each track independent from the others. Tracks can either be media tracks, containing media data, or hint tracks, containing information for streaming protocol. Every presentation must have at least one media track within an ISO file.
@@ -154,6 +170,20 @@ The Track Header Box (\emph{tkhd}) is a mandatory and unique box that specifies 
 \end{itemize}
 
 It is advised that the Header Header Box should be placed first in its container.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{tkhd-video}
+  \caption{The box \emph{tkhd} of a file container of a video acquired with a Samsung Galaxy S3. This box represents an header for a video track.}\label{fig:tkhd-video}
+\end{figure}
+
+Examples can be seen in Fig. \ref{fig:tkhd-video} and Fig. \ref{fig:tkhd-audio}, showing the box \emph{tkhd} of a video acquired with a Samsung Galaxy S3, both for video and audio tracks.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{tkhd-audio}
+  \caption{The box \emph{tkhd} of a file container of a video acquired with a Samsung Galaxy S3. This box represents an header for an audio track.}\label{fig:tkhd-audio}
+\end{figure}
 
 
 \subsubsection*{Media Box (mdia)}
@@ -190,6 +220,8 @@ It contains the following fields:
 \item \emph{handler\_type}: when inside a Media Box, it is an integer containing 'vide' for video tracks, 'soun' for sound track or 'hint' for hint track; when inside a Meta Box,  it contains a value indicating the format of the content of the Meta Box.
 \item \emph{name}: a string of characters that associates a human-readable name for the media track type.
 \end{itemize} 
+
+While \emph{handler\_type} value is consistent, \emph{name} can change along different devices. For example, for a Samsung Galaxy S3 the handler for video tracks is called 'VideoHandle' and the handler for audio tracks is called 'SoundHandle', while for a Apple iPhone 5 they are called 'Core Media Video' and 'Core Media Audio' respectively.
 
 \subsubsection*{Media Information Box (minf)}
 
