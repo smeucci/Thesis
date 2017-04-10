@@ -1,0 +1,18 @@
+% a macro definition, used below
+\pdfxEnableCommands{% simple macro definitions can be provided everything expands to characters
+ \def\RossPete{Ross \& Pete}
+ }
+\Title{Forensic Analysis of Video File Containers}%
+\Author{Saverio Meucci}% *not* set by LaTeX's \author
+\Subject{Metadata for PDF/A conforming documents}
+\Keywords{multimedia forensics, video forensics, file formats, file containers}
+\Org{Università degli Studi di Firenze}
+\CreatorTool{pdfTeX + pdfx.sty with options \pdfxopt}
+\Copyright{Università degli Studi di Firenze}
+\WebStatement{http://www.ingegneria.unifi.it/}% should be URL to copyright statement on the web
+\Doi{0.0.0.0}%
+
+% setting the color profile, these reproduce the defaults; use your own, if required
+%
+% RGB is used with PDF/A (4 parameters):
+\setRGBcolorprofile{sRGB_IEC61966-2-1_black_scaled.icc}{sRGB_IEC61966-2-1_black_scaled}{sRGB IEC61966 v2.1 with black scaling}{http://www.color.org}

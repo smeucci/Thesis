@@ -4,7 +4,7 @@
 
 The dataset is composed of video acquired from smartphones and tablets with operating system \emph{Android} and \emph{iOS}. 
 Videos that have an \emph{Android} acquisition device have a file container that follows the standard of the MP4 \cite{mp4} file format while videos that have an \emph{iOS} acquisition device have a file container that follows the standard of the MOV file format \cite{mov}.
-The full list of devices of the dataset can be seen from Table \ref{devices}). 
+The full list of devices of the dataset can be seen from Table \ref{devices}. 
 
 \begin{table}[]
 \centering
@@ -46,15 +46,15 @@ Each video of the dataset has also been modified thought different means:
 
 \section{Integrity Verification based on File Container}
 
-In order to determine how our approach performs with regard to Integrity Verification we have set up some experiments. As mentioned above, the videos of the dataset have also been modified through different means, thus losing their integrity. In this experiments we check whether the information of the file containers are sufficient to tell the original videos and the modified ones apart.
+In order to determine how our approach performs with regard to Integrity Verification we have set up some experiments. As mentioned above, the videos of the dataset have also been modified through different means, thus losing their integrity. In these experiments we check whether the information of the file containers are sufficient to tell the original videos and the modified ones apart.
 
 The tools that we have used to modify the videos are \emph{Ffmpeg} and \emph{Exiftool}. The modification we have made are as minimal as the tools allow.
 
-In general the experiments have been performed as follow. Given a set of videos $(x_{1},\ldots,x_{n}) \in C_{i}$, with $C_{i}$ a certain device, we have generated the corresponding set of minimally processed videos $(\overline{x_{1}},\ldots,\overline{x_{n}})$ using a certain tool. For each couple of videos $(x_{i}, x_{j})$ of the same device we have computed the differences using the \emph{compare} feature of the Video Format Tool. The differences are then divided by the total number of attributes in the file container that is taken as reference (as explained in Section 3.2), giving us a distance between videos represented as a number between 0 and 1. These distances tell us how much the videos of the same device differs. Then we compute the difference for each couple of $(x_{i}, \overline{x_{j}})$ and for each couple $(\overline{x_{i}}, x_{j})$ to determine how much the original videos differs from the processed ones. We repeat this operation for each device in our dataset.
+In general the experiments have been performed as follow. Given a set of videos $(x_{1},\ldots,x_{n}) \in C_{i}$, with $C_{i}$ a certain device, we have generated the corresponding set of minimally processed videos $(\overline{x_{1}},\ldots,\overline{x_{n}})$ using a certain tool. For each couple of videos $(x_{i}, x_{j})$ of the same device we have computed the differences using the \emph{compare} feature of the Video Format Tool. The differences are then divided by the total number of attributes in the file container that is taken as reference (as explained in Section 3.2), giving us a distance between videos represented as a number between 0 and 1. These distances tell us how much the videos of the same device differ. Then we compute the difference for each couple of $(x_{i}, \overline{x_{j}})$ and for each couple $(\overline{x_{i}}, x_{j})$ to determine how much the original videos differ from the processed ones. We repeat this operation for each device in our dataset.
 
 At the end of the computation we will have a sequence of distances. To each distance we associate a label, 1 when it corresponds to a comparison between original videos and 0 when it corresponds to a comparison between an original video and a processed one.
 
-Then, we determine a threshold that is able to correctly separates the two classes. The first class is composed by the distances between original videos of the same devices; the second is composed by the distances between original and processed videos of the same devices. Using a ROC curve, we illustrate the performance of this simple binary classifier system as the discrimination threshold varies.
+Then, we determine a threshold that is able to correctly separate the two classes. The first class is composed by the distances between original videos of the same devices; the second is composed by the distances between original and processed videos of the same devices. Using a ROC curve, we illustrate the performance of this simple binary classifier system as the discrimination threshold varies.
 
 Once the best threshold that maximizes the ratios between true positive rate (TPR) and false positive rate (FPR) is chosen, we compute the accuracy as:
 
@@ -82,13 +82,13 @@ The results show that when a video is processed by \emph{Ffmpeg} copying the vid
 
 \subsection{Exiftool}
 
-\emph{Exiftool} is a command line application for reading, writing and editing metadata information in a variety of media files. With this tool, we have change all the time related information our dataset videos, using the following command:
+\emph{Exiftool} is a command line application for reading, writing and editing metadata information in a variety of media files. With this tool, we have changed all the time related information of our dataset videos, using the following command:
 
 \begin{lstlisting}
 exiftool "-AllDates=1986:11:05 12:00:00" "input.mp4"
 \end{lstlisting}
 
-Since we are modifying attributes of the file container that are specific to each unique video, we did not expected this test to perform well. The results are in agreement with this assumption. The changes that \emph{Exiftool} does on a file container are minimal; it just adds a new box at the end of the file, leaving the rest of the structure untouched. As we can see from Fig. \ref{fig:exifaal-hist}, it is not possible to find a threshold that correctly separates the two classes of the binary problem.
+Since we are modifying attributes of the file container that are specific to each unique video, we did not expect this test to perform well. The results are in agreement with this assumption. The changes that \emph{Exiftool} does on a file container are minimal; it just adds a new box at the end of the file, leaving the rest of the structure untouched. As we can see from Fig. \ref{fig:exifaal-hist}, it is not possible to find a threshold that correctly separates the two classes of the binary problem.
 
 \begin{figure}
   \centering
@@ -110,7 +110,7 @@ Without considering such attributes, we are able to separate the two classes wit
 
 \section{Application on Social Network}
 
-We have also applied our method to videos that comes from a Social Network, specifically from \emph{Youtube}. The videos of our dataset have been uploaded and then download from \emph{Youtube}.
+We have also applied our method to videos that come from a Social Network, specifically from \emph{Youtube}. The videos of our dataset have been uploaded and then downloaded from \emph{Youtube}.
 
 The experiments have been carried out similarly to the ones for the Integrity Verification. However, we want to determine if videos from \emph{Youtube} are sufficiently similar to be able to distinguish a video that come directly from a source device from a video of that source device that have been subsequently uploaded and downloaded from \emph{Youtube}.
 
@@ -124,13 +124,13 @@ As can be seen from Fig. \ref{fig:youtube-hist}, the values representing the dis
 
 \section{Source Identification based on File Container}
 
-This section will described the experiments ran to assess the accuracy of our approach with regard to Source Identification. For each video of the test set we compute the likelihood ratio with respect to every class of device in the training set. 
+This section will describe the experiments run to assess the accuracy of our approach with regard to Source Identification. For each video of the test set we compute the likelihood ratio with respect to every class of device in the training set. 
 
 When computing the likelihood, the attributes that pertain to the videos and not to the class, as explained previously, will be ignored.
 
 After all the computation have finished, we will obtain a vector of likelihood ratios. To each likelihood ratio we need to associate a label accordingly to the class of the test video and the class for which the likelihood have been computed. The label will be 1 if the tested class is the exact brand and model or only the exact brand of test video; it will be 0 otherwise.
 
-Using the ROC curve, we determine the threshold value for the likelihood ratio that maximizes the accuracy, computes as \ref{eq:accuracy}.
+Using the ROC curve, we determine the threshold value for the likelihood ratio that maximizes the accuracy, computed as \ref{eq:accuracy}.
 
 We consider separately the classes that specify only the brand of devices and the classes that refer to brands and models, taking into account both manual and automatic mode.
 
@@ -139,7 +139,7 @@ For the automatic mode, we measure the precision of our system. Since for this m
 \subsubsection*{Brands}
 
 We can see from the ROC curve shown in Fig. \ref{fig:brand-roc} how the TPR and the FPR change when the threshold varies.
-For manual mode, we obtain a maximum accuracy of 98.08\% with a range of likelihood values between -12 and 14, determined using the results from the ROC curve shown in Fig. (ref).
+For manual mode, we obtain a maximum accuracy of 98.08\% with a range of likelihood values between -12 and 14, determined using the results from the ROC curve.
 
 \begin{figure}
   \centering
