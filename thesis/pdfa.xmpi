@@ -98,9 +98,9 @@
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/"> 
          <xmp:CreatorTool>pdfTeX + pdfx.sty with options a-1b</xmp:CreatorTool> 
-         <xmp:ModifyDate>2017-04-10T20:13:23+02:00</xmp:ModifyDate> 
-         <xmp:CreateDate>2017-04-10T20:13:23+02:00</xmp:CreateDate> 
-         <xmp:MetadataDate>2017-04-10T20:13:23+02:00</xmp:MetadataDate> 
+         <xmp:ModifyDate>2017-04-18T21:40:11+02:00</xmp:ModifyDate> 
+         <xmp:CreateDate>2017-04-18T21:40:11+02:00</xmp:CreateDate> 
+         <xmp:MetadataDate>2017-04-18T21:40:11+02:00</xmp:MetadataDate> 
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:xmpRights = "http://ns.adobe.com/xap/1.0/rights/"> 
          <xmpRights:Marked>True</xmpRights:Marked>
@@ -109,7 +109,7 @@
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"> 
          <xmpMM:DocumentID>uuid:C8CFC28F-88E1-7995-E9AD-F6D12EAD346B</xmpMM:DocumentID> 
-         <xmpMM:InstanceID>uuid:58BC6565-6F81-D47C-B5FB-C92F7CF9FFF3</xmpMM:InstanceID> 
+         <xmpMM:InstanceID>uuid:79F11205-40D9-7D94-3875-2BE4CC9E170D</xmpMM:InstanceID> 
       </rdf:Description> 
    </rdf:RDF> 
 </x:xmpmeta> 
