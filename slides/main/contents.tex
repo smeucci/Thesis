@@ -1,31 +1,253 @@
-%-- Intro --%
-
-
+% INTRODUCTION
 \begin{tframe}{Introduction}
 
+\vspace{0.5cm}
 
-Introduzione:
+In an increasingly digital world, the analysis of the multimedia objects is rapidly assuming importance in the context of digital investigation.
 
-- prove digitali
-- accenno multimedia forensics
-- flusso dati e metadati
+\vspace{1cm}
 
-Proposed Approach:
-
-- file container, breve descrizione
-- teoria
-- overview strumenti realizzati
-
-Esperimenti:
-
-- integrity verification
-- social networks
-- source identification
-
-Conclusioni:
-
-- sviluppi futuri
-
+Multimedia Forensics has developed many techniques with the goal of providing aid in making decisions about a digital content authenticity, integrity and origin.
 
 \end{tframe}
 
+% INTRODUCTION
+\begin{tframe}{Introduction}
+
+\vspace{0.5cm}
+
+We have focused our attention on Source Identification and Integrity Verification of digital videos acquired by smartphones and tablets.
+
+\vspace{0.5cm}
+
+Forensic Analysis is based on the research of the so called \emph{fingerprints}, left both by the acquisition device and by the post-processing steps.
+
+\vspace{0.5cm}
+
+In this regard, techniques mainly use two different tools:
+
+\begin{enumerate}
+\item \textbf{Audio-video signal}: the research of inconsistencies and artefacts in the digital content.
+\item \textbf{Metadata}: the determination of their compatibility, completeness, and consistency.
+\end{enumerate}
+
+\end{tframe}
+
+% FILE CONTAINERS - WHAT'S INSIDE
+\begin{tframe}{Video File Container - What's inside?}
+
+\vspace{0.5cm}
+
+\begin{minipage}{\textwidth}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\textbf{Contained data}, structured information about the content, like:
+\begin{itemize}
+\item Content-related metadata (acquisition time, place, settings, etc.)
+\item Number of tracks/signals (e.g. a video container may include several video tracks.)
+\end{itemize}
+
+\textbf{Codec data}, necessary information to decode and present the signal, like:
+\begin{itemize}
+\item Quantization tables.
+\item Information for entropy decoding
+\end{itemize}
+
+\textbf{Encoded signal(s)}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\includegraphics[width=1\textwidth]{images/container.png}
+\end{column}
+
+\end{columns}
+\end{minipage}
+
+\end{tframe}
+
+% FILE CONTAINER - STRUCTURE
+\begin{tframe}{Video File Container - Structure}
+
+\vspace{0.5cm}
+
+\begin{minipage}{\textwidth}
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+
+As defined by the \emph{ISO Base Media File Format Standard} [1], file containers have a object-oriented type structure.
+
+\vspace{0.5cm}
+
+Each object, called \emph{box} or \emph{atom}, includes specifics information about the media and are identified by 4-byte characters (e.g. \emph{ftyp}, \emph{mdat}, \emph{moov}, etc.).
+
+\vspace{0.5cm}
+
+Boxes can have fields and can contain other boxes.
+
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\includegraphics[width=0.75\textwidth]{images/tree.png}
+\end{column}
+
+\end{columns}
+\end{minipage}
+
+\end{tframe}
+
+% FILE CONTAINER - WHY
+\begin{tframe}{Video File Container - Why?}
+
+\uncover<1->{As noticed by \emph{Gloe et al.} [2], the video format standards (e.g. \emph{ISO Base Media} [1], \emph{MP4} [3], \emph{MOV}[4]) for the file container prescribe only a limited number of features.}
+
+\uncover<2->{
+$$\Downarrow$$
+Freedom of interpretation for the device manufacturers in terms of design decisions (order of the boxes, attributes values, etc.).
+}
+
+\uncover<3->{
+$$\Downarrow$$
+Low-level information to be exploited by the Forensic Analyst.
+}
+
+\end{tframe}
+
+% SOURCE IDENTIFICATION
+\begin{tframe}{Source Identification}
+
+\vspace{0.1cm}
+
+Given a video, we want to assess its origin based on its file container.
+
+\vspace{0.5cm}
+
+We split the problem in binary questions.
+
+\vspace{0.5cm}
+
+Ex. Does the video belongs to Samsung? \newline
+	 ... to Samsung Galaxy S3? \newline
+	 ... to Huawei G6? \newline
+	 ... to Apple? \newline
+	 ... to Apple iPhone 5? \newline
+	 
+\vspace{0.1cm}
+
+Given a question, the dataset is queried to obtain two classes (videos for which the answer is true, and the complementary).
+
+\vspace{0.5cm}
+
+For each question, we want to define a compatibility score.
+
+\end{tframe}
+
+% TRAINING
+\begin{tframe}{Source Identification - Training}
+
+\vspace{0.1cm}
+
+Determine whether a video belongs to a class $C$ (e.g. Samsung).
+
+\vspace{0.1cm}
+
+We split the ground-truth in two sets:
+
+$$ \Omega = X_{C} \cup X_{\overline{C}} = {x_{1}, \ldots, x_{N_{C}} \in C} \cup {x_{1}, \ldots, x_{N_{\overline{C}}} \in \overline{C}} $$
+
+$\Omega$ contains all the attributes $\omega$ of the boxes contained in each of the ground-truth media.
+
+\vspace{0.5cm}
+
+We determine the discrimination power of each of the attributes $\omega$ for the class $C$ and $\overline{C}$.
+
+\begin{minipage}{\textwidth}
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+$$  W_{C}(\omega) = \dfrac{\sum\limits_{i=1}^{N_{C}}\mid X_{i} \cap \omega \mid}{N_{C}} $$
+\end{column}
+
+\begin{column}{0.45\textwidth}
+$$  W_{\overline{C}}(\omega) = \dfrac{\sum\limits_{i=1}^{N_{\overline{C}}}\mid X_{i} \cap \omega \mid}{N_{\overline{C}}} $$
+\end{column}
+
+\end{columns}
+\end{minipage}
+
+\end{tframe}
+
+% TEST
+\begin{tframe}{Source Identification - Test}
+
+Given a media query $X = \omega_{1}, . . . \omega_{t}$, we solve the two hypothesis test problem:
+
+$$  H_{0}:X \in \overline{C} $$
+$$  H_{1}:X \in C $$
+
+Then we determine the likelihood ratio of observing $\omega_{j}, j = 1 \ldots t$.
+
+\vspace{1cm}
+
+\begin{minipage}{\textwidth}
+\begin{columns}[T]
+
+\begin{column}{0.45\textwidth}
+$$ P(\omega_{j}\vert H_{0}) = \Omega_{\overline{C}}(\omega_{j}) $$
+$$ P(\omega_{j}\vert H_{1}) = \Omega_{C}(\omega_{j}) $$ 
+\end{column}
+
+\begin{column}{0.45\textwidth}
+$$ L(X) = \prod\limits_{\omega_{j}}\dfrac{\Omega_{C}(\omega_{j}) }{\Omega_{\overline{C}}(\omega_{j})} $$
+\end{column}
+
+\end{columns}
+\end{minipage}
+
+\vspace{0.5cm}
+
+Then, using $l(X) = lnL(X)$ can be used to determine whether $X$ belongs to class $C$.
+
+\end{tframe}
+
+% ENTROPY
+\begin{tframe}{Source Identification - Correlated Features}
+
+We have supposed that the values of the attributes of a certain box are independently distributed. However, some features might be correlated.
+
+\vspace{0.1cm}
+
+When considering a box, given a vector of likelihood ratios $\overline{x} = (x_{1},\ldots,x_{n})$, we compute the likelihood as:
+
+$$ L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i}^{\alpha_{i}} $$ with $$ \alpha_{i} = \dfrac{(n-1)\gamma_{i}+1}{n} $$ $$ \gamma_{i} = - \dfrac{n}{log n} P(x_{i})log P(x_{i}) $$ and where $P(x_{i})$ represents the probability of finding that value of ratio in the vector.
+
+\end{tframe}
+
+\begin{tframe}{Source Identification - Experiments}
+
+\end{tframe}
+
+\begin{tframe}{Source Identification - Results}
+
+\end{tframe}
+
+\begin{tframe}{Integrity Verification}
+
+\end{tframe}
+
+\begin{tframe}{Integrity Verification - Experiments}
+
+\end{tframe}
+
+\begin{tframe}{Integrity Verification - Results}
+
+\end{tframe}
+
+\begin{tframe}{Web Application}
+
+\end{tframe}
+
+\begin{tframe}{Conclusions}
+
+\end{tframe}
