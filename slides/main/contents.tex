@@ -3,7 +3,7 @@
 
 \vspace{0.2cm}
 
-In an increasingly digital world, the analysis of the multimedia objects is rapidly assuming importance in the context of digital investigation.
+In an increasingly digital world, the analysis of multimedia objects is rapidly assuming importance in the context of digital investigation.
 
 \vspace{0.2cm}
 
@@ -25,10 +25,6 @@ We have focused our attention on Source Identification and Integrity Verificatio
 
 \vspace{0.5cm}
 
-Forensic Analysis is based on the research of the so called \emph{fingerprints}, left both by the acquisition device and by the post-processing steps.
-
-\vspace{0.5cm}
-
 In this regard, techniques mainly use two different tools:
 
 \begin{enumerate}
@@ -41,13 +37,13 @@ In this regard, techniques mainly use two different tools:
 % FILE CONTAINERS - WHAT'S INSIDE
 \begin{tframe}{Video File Container - What's inside?}
 
-\vspace{0.5cm}
+\vspace{0.2cm}
 
 \begin{minipage}{\textwidth}
 \begin{columns}[T]
 
 \begin{column}{0.55\textwidth}
-\textbf{Contained data}, structured information about the content, like:
+\textbf{Container data}, structured information about the content, like:
 \begin{itemize}
 \item Content-related metadata (acquisition time, place, settings, etc.)
 \item Number of tracks/signals (e.g. a video container may include several video tracks.)
@@ -105,7 +101,7 @@ Boxes can have fields and can contain other boxes.
 % FILE CONTAINER - WHY
 \begin{tframe}{Video File Container - Why?}
 
-\uncover<1->{As noticed by \emph{Gloe et al.} [2], the video format standards (e.g. \emph{ISO Base Media} [1], \emph{MP4} [3], \emph{MOV}[4]) for the file container prescribe only a limited number of features.}
+\uncover<1->{As noticed by \emph{Gloe et al.} [2], the video format standards (e.g. \emph{ISO Base Media} [1], \emph{MP4} [3], \emph{MOV} [4]) for the file container prescribe only a limited number of features.}
 
 \uncover<2->{
 $$\Downarrow$$
@@ -140,7 +136,7 @@ Ex. Does the video belongs to Samsung? \newline
 	 
 \vspace{0.1cm}
 
-Given a question, the dataset is queried to obtain two classes (videos for which the answer is true, and the complementary).
+Given a question, a training dataset is queried to obtain two classes (videos for which the answer is true, and the complementary).
 
 \vspace{0.5cm}
 
@@ -191,7 +187,7 @@ Given a media query $X = \omega_{1}, . . . \omega_{t}$, we solve the two hypothe
 $$  H_{0}:X \in \overline{C} $$
 $$  H_{1}:X \in C $$
 
-Then we determine the likelihood ratio of observing $\omega_{j}, j = 1 \ldots t$.
+To do so, we determine the likelihood ratio of observing $\omega_{j}, j = 1 \ldots t$.
 
 \vspace{1cm}
 
@@ -199,12 +195,12 @@ Then we determine the likelihood ratio of observing $\omega_{j}, j = 1 \ldots t$
 \begin{columns}[T]
 
 \begin{column}{0.45\textwidth}
-$$ P(\omega_{j}\vert H_{0}) = \Omega_{\overline{C}}(\omega_{j}) $$
-$$ P(\omega_{j}\vert H_{1}) = \Omega_{C}(\omega_{j}) $$ 
+$$ P(\omega_{j}\vert H_{0}) = W_{\overline{C}}(\omega_{j}) $$
+$$ P(\omega_{j}\vert H_{1}) = W_{C}(\omega_{j}) $$ 
 \end{column}
 
 \begin{column}{0.45\textwidth}
-$$ L(X) = \prod\limits_{\omega_{j}}\dfrac{\Omega_{C}(\omega_{j}) }{\Omega_{\overline{C}}(\omega_{j})} $$
+$$ L(X) = \prod\limits_{\omega_{j}}\dfrac{W_{C}(\omega_{j}) }{W_{\overline{C}}(\omega_{j})} $$
 \end{column}
 
 \end{columns}
@@ -219,11 +215,11 @@ Then, $l(X) = lnL(X)$ can be used to determine whether $X$ belongs to class $C$.
 % ENTROPY
 \begin{tframe}{Source Identification - Correlated Features}
 
-We have supposed that the values of the attributes of a certain box are independently distributed. However, some features might be correlated.
+Some features might be correlated. For each box, we consider the entropy of its attributes in order to remove redundant information.
 
 \vspace{0.1cm}
 
-When considering a box, given a vector of likelihood ratios $\overline{x} = (x_{1},\ldots,x_{n})$, we compute the likelihood as:
+When considering a box, given a vector of likelihood ratios $\overline{x} = (x_{1},\ldots,x_{n})$, we compute the likelihood for that box as:
 
 $$ L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i}^{\alpha_{i}} $$ with $$ \alpha_{i} = \dfrac{(n-1)\gamma_{i}+1}{n} $$ $$ \gamma_{i} = - \dfrac{n}{log n} P(x_{i})log P(x_{i}) $$ and where $P(x_{i})$ represents the probability of finding that value of ratio in the vector.
 
@@ -236,9 +232,9 @@ The dataset is composed of 260 videos acquired from smartphones and tablets with
 The tests are divided in two types, changing the definition of a class of device:
 
 \begin{itemize}
-\item \textbf{Brand}: we try to identify the test videos brand.
+\item \textbf{Brand}: we try to identify the test videos brand (3 brands).
 \vspace{0.1cm}
-\item \textbf{Model}: we try to identify both brand and model.
+\item \textbf{Model}: we try to identify both brand and model (13 models).
 \end{itemize}
 \vspace{0.2cm}
 
@@ -310,7 +306,7 @@ For these experiments, we have altered the videos of the dataset with different 
 \begin{itemize}
 \item \textbf{Ffmpeg}: we have directly cut the videos, without re-encoding.
 \vspace{0.1cm}
-\item \textbf{Exiftool}: we have change the metadata related to Date and Time.
+\item \textbf{Exiftool}: we have changed the metadata related to Date and Time.
 \vspace{0.1cm}
 \item \textbf{YouTube}: we have uploaded and downloaded the videos from \emph{YouTube}.
 \end{itemize}
@@ -360,24 +356,33 @@ For the \emph{Exiftool} case, we did not consider the differences caused by attr
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.65\textwidth]{images/ffmpeg-hist.png}
+    \includegraphics[width=0.70\textwidth]{images/ffmpeg-hist.png}
     \caption{Differences distribution for the Ffmpeg case. Red for original videos; blue for modified videos.}
 \end{figure}
+
 \end{tframe}
 
+\begin{tframe}{Web Application}
 
+\begin{figure}
+\centering
+    \includegraphics[width=1\textwidth]{images/webapp.png}
+    \caption{Interface for the Source Identification feature.}
+\end{figure}
+
+\end{tframe}
 
 \begin{tframe}{Conclusions}
 
 \begin{itemize}
-\item Using the video file containers, we implement two approaches for Source Identification and Integrity Verification.
+\item Using the video file containers, we implemented two approaches for Source Identification and Integrity Verification.
 \vspace{0.1cm}
 \item Video file container turned out to be a powerful tool; both approaches achieved promising results.
 \vspace{0.1cm}
 \item Should be considered preliminary work; further developments:
 \begin{itemize}
 \vspace{0.1cm}
-\item Perfome tests with a higher variety of devices.
+\item Perform tests with a higher variety of devices.
 \vspace{0.1cm}
 \item Take into consideration the version of the operating system.
 \vspace{0.1cm}
