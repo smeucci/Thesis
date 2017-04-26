@@ -155,7 +155,7 @@ Determine whether a video belongs to a class $C$ (e.g. Samsung).
 
 We split the ground-truth in two sets:
 
-$$ \Omega = X_{C} \cup X_{\overline{C}} = {x_{1}, \ldots, x_{N_{C}} \in C} \cup {x_{1}, \ldots, x_{N_{\overline{C}}} \in \overline{C}} $$
+$$ \Omega = X_{C} \cup X_{\overline{C}} = {x_{1}, \ldots, x_{N_{C}} \in C} \cup {y_{1}, \ldots, y_{N_{\overline{C}}} \in \overline{C}} $$
 
 $\Omega$ contains all the attributes $\omega$ of the boxes contained in each of the ground-truth media $X$.
 }
@@ -296,8 +296,8 @@ For each of these types, we consider:
 \textbf{Type} & \textbf{ACC} & \textbf{THRESHOLD} & \textbf{TOP 1} & \textbf{TOP 3} & \textbf{TOP 5}\\ [0.5ex]
 \hline
 
-Brand & 98.08\% & 0 & 98.08\% & 92\% & - & - \\
-Model & 97.54\% & 3.5 & 96.79\% & 84.62\% & 100\% & 100\% \\
+Brand & 98.08\% & 0 & 92\% & - & - \\
+Model & 97.54\% & 3.5 & 84.62\% & 100\% & 100\% \\
 
 \hline
 \end{tabular}
