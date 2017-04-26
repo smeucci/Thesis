@@ -3,11 +3,11 @@
 
 \vspace{0.2cm}
 
-In an increasingly digital world, the analysis of multimedia objects is rapidly assuming importance in the context of digital investigation.
+In an increasingly digital world, the analysis of multimedia objects is rapidly assuming importance in the context of \textbf{digital investigation}.
 
 \vspace{0.5cm}
 
-Multimedia Forensics has developed many techniques with the goal of providing aid in making decisions about a digital content authenticity, integrity and origin.
+Multimedia Forensics has developed many techniques with the goal of providing aid in making decisions about a digital content \textbf{authenticity}, \textbf{integrity} and \textbf{origin}.
 
 \begin{figure}
 \centering
@@ -85,7 +85,7 @@ Each object, called \textbf{box} or \textbf{atom}, includes specifics informatio
 
 \vspace{0.5cm}
 
-Boxes can have fields and can contain other boxes.
+Boxes can have \textbf{attributes} and can contain other boxes.
 
 \end{column}
 
@@ -105,12 +105,12 @@ Boxes can have fields and can contain other boxes.
 
 \uncover<2->{
 $$\Downarrow$$
-Freedom of interpretation for the device manufacturers in terms of design decisions (order of the boxes, attributes values, etc.).
+\textbf{Freedom of interpretation} for the device manufacturers in terms of design decisions (order of the boxes, attributes values, etc.).
 }
 
 \uncover<3->{
 $$\Downarrow$$
-Low-level information that we have exploited with regard to Source Identification and Integrity Verification.
+Low-level information that we have exploited with regard to \textbf{Source Identification} and \textbf{Integrity Verification}.
 }
 
 \end{tframe}
@@ -163,7 +163,7 @@ $\Omega$ contains all the attributes $\omega$ of the boxes contained in each of 
 \uncover<2->{
 $$\Downarrow$$
 
-We determine the discrimination power of each of the attributes $\omega$ for the class $C$ and $\overline{C}$.
+We determine the \textbf{discrimination power} of each of the attributes $\omega$ for the class $C$ and $\overline{C}$.
 
 \begin{minipage}{\textwidth}
 \begin{columns}[T]
@@ -190,7 +190,7 @@ Given a media query $X = \omega_{1}, . . . \omega_{t}$, we solve the two hypothe
 $$  H_{0}:X \in \overline{C} $$
 $$  H_{1}:X \in C $$
 
-To do so, we determine the likelihood ratio of observing $\omega_{j}, j = 1 \ldots t$.
+To do so, we determine the \textbf{likelihood} ratio of observing $\omega_{j}, j = 1 \ldots t$.
 
 \vspace{1cm}
 
@@ -218,9 +218,9 @@ Then, $l(X) = lnL(X)$ can be used to determine whether $X$ belongs to class $C$.
 % ENTROPY
 \begin{tframe}{Source Identification - Correlated Features}
 
-Some features might be correlated. For each box, we consider the entropy of its attributes in order to remove redundant information.
+Some features might be correlated. For each box, we consider the \textbf{entropy} of its attributes in order to remove redundant information.
 
-\vspace{0.1cm}
+\vspace{0.3cm}
 
 When considering a box, given a vector of likelihood ratios $\overline{x} = (x_{1},\ldots,x_{n})$, we compute the likelihood for that box as:
 
@@ -383,7 +383,7 @@ Using their file containers, we compute the differences:
 \end{footnotesize}
 
 \vspace{0.2cm}
-Using the file containers, we were always able to correctly separate the original videos from the modified ones.
+We were always able to correctly separate the original videos from the modified ones.
 
 \vspace{0.5cm}
 These tools alter the original file container.
