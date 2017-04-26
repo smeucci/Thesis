@@ -21,15 +21,11 @@ Multimedia Forensics has developed many techniques with the goal of providing ai
 
 \vspace{0.2cm}
 
-We have focused our attention on Source Identification and Integrity Verification of digital videos acquired by smartphones and tablets.
-
-\vspace{0.5cm}
-
-In this regard, techniques mainly use two different tools:
+In this regard, techniques mainly use two different approaches:
 
 \begin{enumerate}
 \item \textbf{Audio-video signal}: the research of inconsistencies and artefacts in the digital content.
-\item \textbf{Metadata}: the determination of their compatibility, completeness, and consistency.
+\item \textbf{Metadata/Container}: the determination of their compatibility, completeness, and consistency.
 \end{enumerate}
 
 \end{tframe}
@@ -37,23 +33,27 @@ In this regard, techniques mainly use two different tools:
 % FILE CONTAINERS - WHAT'S INSIDE
 \begin{tframe}{Video File Container - What's inside?}
 
-\vspace{0.2cm}
+\vspace{0.5cm}
 
 \begin{minipage}{\textwidth}
 \begin{columns}[T]
 
 \begin{column}{0.55\textwidth}
-\textbf{Container data}, structured information about the content, like:
+\textbf{Container data}, structured information about the content:
 \begin{itemize}
-\item Content-related metadata (acquisition time, place, settings, etc.)
-\item Number of tracks/signals (e.g. a video container may include several video tracks.)
+\item Content-related metadata
+\item Number of tracks/signals
 \end{itemize}
 
-\textbf{Codec data}, necessary information to decode and present the signal, like:
+\vspace{0.2cm}
+
+\textbf{Codec data}, necessary information to decode and present the signal:
 \begin{itemize}
 \item Quantization tables.
 \item Information for entropy decoding
 \end{itemize}
+
+\vspace{0.2cm}
 
 \textbf{Encoded signal(s)}
 \end{column}
@@ -81,7 +81,7 @@ As defined by the \emph{ISO Base Media File Format Standard} [1], file container
 
 \vspace{0.5cm}
 
-Each object, called \emph{box} or \emph{atom}, includes specifics information about the media and are identified by 4-byte characters (e.g. \emph{ftyp}, \emph{mdat}, \emph{moov}, etc.).
+Each object, called \textbf{box} or \textbf{atom}, includes specifics information about the media and are identified by 4-byte characters (e.g. \emph{ftyp}, \emph{mdat}, \emph{moov}, etc.).
 
 \vspace{0.5cm}
 
@@ -110,7 +110,7 @@ Freedom of interpretation for the device manufacturers in terms of design decisi
 
 \uncover<3->{
 $$\Downarrow$$
-Low-level information to be exploited by the Forensic Analyst.
+Low-level information that we have exploited with regard to Source Identification and Integrity Verification.
 }
 
 \end{tframe}
@@ -124,7 +124,7 @@ Given a video, we want to assess its origin based on its file container.
 
 \vspace{0.5cm}
 
-We split the problem in binary questions.
+We split the problem in \textbf{binary questions}.
 
 \vspace{0.5cm}
 
@@ -147,7 +147,7 @@ For each question, we want to define a compatibility score.
 % TRAINING
 \begin{tframe}{Source Identification - Training}
 
-\vspace{0.1cm}
+\uncover<1->{\vspace{0.1cm}
 
 Determine whether a video belongs to a class $C$ (e.g. Samsung).
 
@@ -157,9 +157,11 @@ We split the ground-truth in two sets:
 
 $$ \Omega = X_{C} \cup X_{\overline{C}} = {x_{1}, \ldots, x_{N_{C}} \in C} \cup {x_{1}, \ldots, x_{N_{\overline{C}}} \in \overline{C}} $$
 
-$\Omega$ contains all the attributes $\omega$ of the boxes contained in each of the ground-truth media.
+$\Omega$ contains all the attributes $\omega$ of the boxes contained in each of the ground-truth media $X$.
+}
 
-\vspace{0.5cm}
+\uncover<2->{
+$$\Downarrow$$
 
 We determine the discrimination power of each of the attributes $\omega$ for the class $C$ and $\overline{C}$.
 
@@ -175,6 +177,7 @@ $$  W_{\overline{C}}(\omega) = \dfrac{\sum\limits_{i=1}^{N_{\overline{C}}}\mid X
 \end{column}
 
 \end{columns}
+}
 \end{minipage}
 
 \end{tframe}
@@ -221,7 +224,7 @@ Some features might be correlated. For each box, we consider the entropy of its 
 
 When considering a box, given a vector of likelihood ratios $\overline{x} = (x_{1},\ldots,x_{n})$, we compute the likelihood for that box as:
 
-$$ L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i}^{\alpha_{i}} $$ with $$ \alpha_{i} = \dfrac{(n-1)\gamma_{i}+1}{n} $$ $$ \gamma_{i} = - \dfrac{n}{log n} P(x_{i})log P(x_{i}) $$ and where $P(x_{i})$ represents the probability of finding that value of ratio in the vector.
+$$ L(\overline{x}) = \prod\limits_{i=1}^{n} x_{i}^{\alpha_{i}(\gamma_{i})} $$ with  $$ \gamma_{i} = - \dfrac{n}{log n} P(x_{i})log P(x_{i}) $$ and where $P(x_{i})$ represents the probability of finding that value of ratio in the vector.
 
 \end{tframe}
 
@@ -290,11 +293,11 @@ For each of these types, we consider:
 \centering
 \begin{tabular}{c c c c c c c} 
 \hline \hline 
-\textbf{Type} & \textbf{ACC} & \textbf{THRESHOLDS} & \textbf{TH = 0} & \textbf{TOP 1} & \textbf{TOP 3} & \textbf{TOP 5}\\ [0.5ex]
+\textbf{Type} & \textbf{ACC} & \textbf{THRESHOLD} & \textbf{TOP 1} & \textbf{TOP 3} & \textbf{TOP 5}\\ [0.5ex]
 \hline
 
-Brand & 98.08\% & [-12, 14] & 98.08\% & 92\% & - & - \\
-Model & 97.54\% & [3, 4] & 96.79\% & 84.62\% & 100\% & 100\% \\
+Brand & 98.08\% & 0 & 98.08\% & 92\% & - & - \\
+Model & 97.54\% & 3.5 & 96.79\% & 84.62\% & 100\% & 100\% \\
 
 \hline
 \end{tabular}
@@ -370,9 +373,9 @@ Using their file containers, we compute the differences:
 \hline \hline 
 \textbf{N.} & \textbf{Tool} & \textbf{ACC} & \textbf{THRESHOLD}\\ [0.5ex]
 \hline
-1 & Ffmpeg & 100\% & [0.11, 0.66]\\
+1 & Ffmpeg & 100\% & 0.385\\
 2 & Exiftool & 100\% &	0.001 \\
-3 &	YouTube & 100\% & [0.39, 0.55] \\ 
+3 &	YouTube & 100\% & 0.470 \\ 
 
 \hline
 \end{tabular}
@@ -383,17 +386,7 @@ Using their file containers, we compute the differences:
 Using the file containers, we were always able to correctly separate the original videos from the modified ones.
 
 \vspace{0.5cm}
-For the \emph{Exiftool} case, we did not consider the differences caused by attributes whose values are unique to each video (acquisition time, modification time, duration, size, etc.).
-
-\end{tframe}
-
-\begin{tframe}{Integrity Verification - Results}
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.70\textwidth]{images/ffmpeg-hist.png}
-    \caption{Differences distribution for the Ffmpeg case. Red for original videos; blue for modified videos.}
-\end{figure}
+These tools alter the original file container.
 
 \end{tframe}
 
@@ -411,19 +404,17 @@ For the \emph{Exiftool} case, we did not consider the differences caused by attr
 
 \begin{itemize}
 \item Using the video file containers, we implemented two approaches for Source Identification and Integrity Verification.
-\vspace{0.1cm}
+\vspace{0.2cm}
 \item Video file container turned out to be a powerful tool; both approaches achieved promising results.
-\vspace{0.1cm}
+\vspace{0.2cm}
 \item Should be considered preliminary work; further developments:
 \begin{itemize}
-\vspace{0.1cm}
+\vspace{0.2cm}
 \item Perform tests with a higher variety of devices.
-\vspace{0.1cm}
+\vspace{0.2cm}
 \item Take into consideration the version of the operating system.
-\vspace{0.1cm}
+\vspace{0.2cm}
 \item Specialize how the attributes are compared (e.g. check for format for Date and Time).
-\vspace{0.1cm}
-\item For Source Identification, it is critical how the reference population is built.
 \end{itemize}
 \end{itemize}
 \end{tframe}
